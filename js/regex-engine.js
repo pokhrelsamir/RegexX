@@ -1,417 +1,60 @@
 /**
  * =========================================================
  * RegexX
- * Regular Expression Engine
- * ========================================================= *
+ * Regular Expression Tester & Builder
+ * =========================================================
  *
  * Responsibilities:
- * - Build regular expressions
- * - Validate patterns
- * - Execute regex matches
- * - Extract match information
+ * - Create regular expressions
+ * - Validate regex syntax
+ * - Execute regex tests
+ * - Find matches
  * - Count capture groups
- * - Generate highlight ranges
+ * - Highlight matches
+ * - Render match details
  * - Measure execution time
  */
 
 
 /* =========================================================
-   CREATE REGEX
+   DOM ELEMENTS
    ========================================================= */
 
-/**
- * Creates a JavaScript RegExp object.
- *
- * @param {string} pattern
- * @param {string} flags
- * @returns {RegExp}
- */
-function createRegex(pattern, flags = "") {
+const regexInputElement =
+    document.getElementById("regexInput");
 
-    try {
+const testInputElement =
+    document.getElementById("testInput");
 
-        return new RegExp(pattern, flags);
+const regexStatusElement =
+    document.getElementById("regexStatus");
 
-    } catch (error) {
+const statusValueElement =
+    document.getElementById("statusValue");
 
-        throw new Error(
-            error.message || "Invalid regular expression."
-        );
-    }
-}
+const matchCountElement =
+    document.getElementById("matchCount");
+
+const groupCountElement =
+    document.getElementById("groupCount");
+
+const executionTimeElement =
+    document.getElementById("executionTime");
+
+const highlightPreviewElement =
+    document.getElementById("highlightPreview");
+
+const matchResultsElement =
+    document.getElementById("matchResults");
 
 
 /* =========================================================
-   VALIDATE REGEX
+   HTML ESCAPE
    ========================================================= */
 
-/**
- * Validates a regex pattern.
- *
- * @param {string} pattern
- * @param {string} flags
- * @returns {Object}
- */
-function validateRegex(pattern, flags = "") {
-
-    if (!pattern) {
-
-        return {
-            valid: false,
-            message: "Enter a regular expression."
-        };
-    }
-
-    try {
-
-        new RegExp(pattern, flags);
-
-        return {
-            valid: true,
-            message: "Valid regex."
-        };
-
-    } catch (error) {
-
-        return {
-            valid: false,
-            message: error.message || "Invalid regex."
-        };
-    }
-}
-
-
-/* =========================================================
-   COUNT CAPTURE GROUPS
-   ========================================================= */
-
-/**
- * Counts capturing groups.
- *
- * This intentionally handles the common JavaScript
- * regex cases used by RegexX.
- *
- * @param {string} pattern
- * @returns {number}
- */
-function countCaptureGroups(pattern) {
-
-    if (!pattern) {
-        return 0;
-    }
-
-    let count = 0;
-    let escaped = false;
-    let insideCharacterClass = false;
-
-    for (let i = 0; i < pattern.length; i++) {
-
-        const char = pattern[i];
-
-        if (escaped) {
-
-            escaped = false;
-            continue;
-        }
-
-        if (char === "\\") {
-
-            escaped = true;
-            continue;
-        }
-
-        if (char === "[") {
-
-            insideCharacterClass = true;
-            continue;
-        }
-
-        if (char === "]") {
-
-            insideCharacterClass = false;
-            continue;
-        }
-
-        if (
-            char === "(" &&
-            !insideCharacterClass
-        ) {
-
-            /*
-             * (?=...)
-             * (?!...)
-             * (?:...)
-             * (?<=...)
-             * (?<!...)
-             * (?<name>...)
-             *
-             * are non-standard capturing syntaxes,
-             * except named groups (?<name>...).
-             */
-
-            if (pattern[i + 1] === "?") {
-
-                if (pattern[i + 2] === "<") {
-
-                    const next = pattern[i + 3];
-
-                    /*
-                     * (?<=...)
-                     * (?<!...)
-                     */
-
-                    if (
-                        next === "=" ||
-                        next === "!"
-                    ) {
-
-                        continue;
-                    }
-
-                    /*
-                     * (?<name>...)
-                     */
-
-                    count++;
-                }
-
-                continue;
-            }
-
-            count++;
-        }
-    }
-
-    return count;
-}
-
-
-/* =========================================================
-   EXECUTE REGEX
-   ========================================================= */
-
-/**
- * Executes a regex against text.
- *
- * @param {string} pattern
- * @param {string} flags
- * @param {string} text
- * @returns {Object}
- */
-function executeRegex(
-    pattern,
-    flags,
-    text
-) {
-
-    const startTime = performance.now();
-
-    const validation =
-        validateRegex(pattern, flags);
-
-    if (!validation.valid) {
-
-        return {
-            valid: false,
-            error: validation.message,
-            matches: [],
-            count: 0,
-            groups: 0,
-            executionTime: 0
-        };
-    }
-
-
-    if (!text) {
-
-        return {
-            valid: true,
-            error: null,
-            matches: [],
-            count: 0,
-            groups: countCaptureGroups(pattern),
-            executionTime:
-                performance.now() - startTime
-        };
-    }
-
-
-    const regex =
-        createRegex(pattern, flags);
-
-
-    const matches = [];
-
-
-    /*
-     * Global and sticky regexes can use exec()
-     * repeatedly.
-     */
-
-    if (
-        flags.includes("g") ||
-        flags.includes("y")
-    ) {
-
-        let match;
-
-        while (
-            (match = regex.exec(text)) !== null
-        ) {
-
-            matches.push(
-                createMatchObject(match)
-            );
-
-
-            /*
-             * Prevent infinite loops with
-             * zero-length matches.
-             */
-
-            if (match[0] === "") {
-
-                regex.lastIndex++;
-            }
-        }
-
-    } else {
-
-        const match =
-            regex.exec(text);
-
-        if (match) {
-
-            matches.push(
-                createMatchObject(match)
-            );
-        }
-    }
-
-
-    const executionTime =
-        performance.now() - startTime;
-
-
-    return {
-
-        valid: true,
-
-        error: null,
-
-        matches,
-
-        count: matches.length,
-
-        groups:
-            countCaptureGroups(pattern),
-
-        executionTime
-    };
-}
-
-
-/* =========================================================
-   MATCH OBJECT
-   ========================================================= */
-
-/**
- * Converts native RegExp match data
- * into a clean RegexX object.
- *
- * @param {RegExpExecArray} match
- * @returns {Object}
- */
-function createMatchObject(match) {
-
-    const groups = [];
-
-    /*
-     * Standard numbered capture groups.
-     */
-
-    for (
-        let i = 1;
-        i < match.length;
-        i++
-    ) {
-
-        groups.push({
-
-            index: i,
-
-            value:
-                match[i] !== undefined
-                    ? match[i]
-                    : null
-        });
-    }
-
-
-    /*
-     * Named groups.
-     */
-
-    const namedGroups =
-        match.groups || {};
-
-
-    return {
-
-        value: match[0],
-
-        index: match.index,
-
-        length: match[0].length,
-
-        end:
-            match.index +
-            match[0].length,
-
-        groups,
-
-        namedGroups
-    };
-}
-
-
-/* =========================================================
-   HIGHLIGHT RANGES
-   ========================================================= */
-
-/**
- * Returns match ranges for highlighting.
- *
- * @param {Array} matches
- * @returns {Array}
- */
-function getHighlightRanges(matches) {
-
-    return matches.map(match => ({
-
-        start: match.index,
-
-        end: match.end,
-
-        value: match.value
-    }));
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-   ========================================================= */
-
-/**
- * Prevents user-provided text from being
- * interpreted as HTML.
- *
- * @param {string} value
- * @returns {string}
- */
 function escapeRegexHTML(value) {
 
-    return String(value)
+    return String(value ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -421,54 +64,277 @@ function escapeRegexHTML(value) {
 
 
 /* =========================================================
-   BUILD HIGHLIGHTED HTML
+   GET FLAGS
    ========================================================= */
 
-/**
- * Creates highlighted HTML from text and
- * match ranges.
- *
- * @param {string} text
- * @param {Array} matches
- * @returns {string}
- */
-function buildHighlightedHTML(
-    text,
-    matches
+function getRegexFlags() {
+
+    const flagInputs =
+        document.querySelectorAll(
+            '.flag-option input[type="checkbox"]'
+        );
+
+
+    return Array.from(flagInputs)
+        .filter(input => input.checked)
+        .map(input => input.value)
+        .join("");
+}
+
+
+/* =========================================================
+   COUNT CAPTURE GROUPS
+   ========================================================= */
+
+function countCaptureGroups(pattern) {
+
+    let count = 0;
+
+    let escaped = false;
+
+    let inCharacterClass = false;
+
+
+    for (
+        let index = 0;
+        index < pattern.length;
+        index++
+    ) {
+
+        const character =
+            pattern[index];
+
+
+        /*
+         * Handle escaped characters.
+         */
+
+        if (escaped) {
+
+            escaped = false;
+
+            continue;
+        }
+
+
+        if (character === "\\") {
+
+            escaped = true;
+
+            continue;
+        }
+
+
+        /*
+         * Character class:
+         * [abc]
+         */
+
+        if (character === "[") {
+
+            inCharacterClass = true;
+
+            continue;
+        }
+
+
+        if (
+            character === "]" &&
+            inCharacterClass
+        ) {
+
+            inCharacterClass = false;
+
+            continue;
+        }
+
+
+        if (inCharacterClass) {
+            continue;
+        }
+
+
+        /*
+         * Capture group.
+         *
+         * Count "(" unless it begins
+         * a non-capturing/lookaround group.
+         */
+
+        if (character === "(") {
+
+            if (
+                pattern[index + 1] === "?"
+            ) {
+
+                continue;
+            }
+
+
+            count++;
+        }
+
+    }
+
+
+    return count;
+}
+
+
+/* =========================================================
+   SET STATUS
+   ========================================================= */
+
+function setRegexStatus(
+    type,
+    message
 ) {
 
-    if (!text) {
+    if (regexStatusElement) {
 
-        return `
+        regexStatusElement.textContent =
+            message;
+
+        regexStatusElement.className =
+            `status ${type}`;
+
+    }
+
+
+    if (statusValueElement) {
+
+        statusValueElement.textContent =
+            message;
+
+    }
+}
+
+
+/* =========================================================
+   RESET RESULTS
+   ========================================================= */
+
+function resetResults() {
+
+    if (matchCountElement) {
+
+        matchCountElement.textContent =
+            "0";
+
+    }
+
+
+    if (groupCountElement) {
+
+        groupCountElement.textContent =
+            "0";
+
+    }
+
+
+    if (executionTimeElement) {
+
+        executionTimeElement.textContent =
+            "—";
+
+    }
+
+
+    if (highlightPreviewElement) {
+
+        highlightPreviewElement.innerHTML = `
             <span class="placeholder-text">
                 Matches will appear here...
             </span>
         `;
+
+    }
+
+
+    if (matchResultsElement) {
+
+        matchResultsElement.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🔎
+                </div>
+
+                <h3>No matches yet</h3>
+
+                <p>
+                    Enter a regex pattern and test text
+                    to see matching results.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   HIGHLIGHT MATCHES
+   ========================================================= */
+
+function renderHighlightPreview(
+    text,
+    matches
+) {
+
+    if (!highlightPreviewElement) {
+        return;
+    }
+
+
+    if (!text) {
+
+        highlightPreviewElement.innerHTML = `
+            <span class="placeholder-text">
+                Enter test text to see matches...
+            </span>
+        `;
+
+        return;
     }
 
 
     if (!matches.length) {
 
-        return escapeRegexHTML(text);
+        highlightPreviewElement.innerHTML =
+            escapeRegexHTML(text);
+
+        return;
     }
 
 
-    let output = "";
-    let cursor = 0;
+    let html = "";
+
+    let lastIndex = 0;
 
 
-    matches.forEach((match, index) => {
+    matches.forEach(match => {
 
-        const start = match.index;
-        const end = match.end;
+        const start =
+            match.index;
+
+        const end =
+            start + match[0].length;
 
 
         /*
-         * Add normal text before match.
+         * Add text before match.
          */
 
-        output += escapeRegexHTML(
-            text.slice(cursor, start)
+        html += escapeRegexHTML(
+            text.slice(
+                lastIndex,
+                start
+            )
         );
 
 
@@ -476,15 +342,39 @@ function buildHighlightedHTML(
          * Add highlighted match.
          */
 
-        output += `
-            <span
-                class="highlight"
-                title="Match ${index + 1}"
-            >${escapeRegexHTML(match.value)}</span>
-        `;
+        const matchedText =
+            match[0];
 
 
-        cursor = end;
+        /*
+         * Empty matches need special handling.
+         */
+
+        if (matchedText.length === 0) {
+
+            html += `
+                <span
+                    class="highlight"
+                    title="Empty match"
+                >
+                    ↔
+                </span>
+            `;
+
+        } else {
+
+            html += `
+                <span class="highlight">
+                    ${escapeRegexHTML(
+                        matchedText
+                    )}
+                </span>
+            `;
+
+        }
+
+
+        lastIndex = end;
 
     });
 
@@ -493,42 +383,591 @@ function buildHighlightedHTML(
      * Add remaining text.
      */
 
-    output += escapeRegexHTML(
-        text.slice(cursor)
+    html += escapeRegexHTML(
+        text.slice(lastIndex)
     );
 
 
-    return output;
+    highlightPreviewElement.innerHTML =
+        html;
 }
 
 
 /* =========================================================
-   FORMAT EXECUTION TIME
+   RENDER MATCH DETAILS
    ========================================================= */
 
-/**
- * Formats execution time for the UI.
- *
- * @param {number} milliseconds
- * @returns {string}
- */
-function formatExecutionTime(
-    milliseconds
+function renderMatchResults(
+    matches
 ) {
 
+    if (!matchResultsElement) {
+        return;
+    }
+
+
+    if (!matches.length) {
+
+        matchResultsElement.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🔎
+                </div>
+
+                <h3>No matches found</h3>
+
+                <p>
+                    The regex is valid, but no matching
+                    text was found.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    matchResultsElement.innerHTML =
+        matches.map(
+            (match, index) => {
+
+                const start =
+                    match.index;
+
+                const end =
+                    start + match[0].length;
+
+
+                return `
+
+                    <div class="match-item">
+
+                        <span class="match-number">
+                            MATCH ${index + 1}
+                        </span>
+
+                        <span class="match-value">
+                            ${escapeRegexHTML(
+                                match[0]
+                            )}
+                        </span>
+
+                        <span class="match-index">
+                            ${start}–${end}
+                        </span>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+}
+
+
+/* =========================================================
+   CREATE MATCH ARRAY
+   ========================================================= */
+
+function executeRegex(
+    regex,
+    text
+) {
+
+    const matches = [];
+
+
+    /*
+     * Global and sticky regexes can use
+     * exec() repeatedly.
+     */
+
     if (
-        !Number.isFinite(milliseconds)
+        regex.global ||
+        regex.sticky
     ) {
 
-        return "—";
+        let match;
+
+
+        /*
+         * Prevent infinite loops with
+         * zero-length matches.
+         */
+
+        while (
+            (match = regex.exec(text)) !==
+            null
+        ) {
+
+            matches.push({
+                0:
+                    match[0],
+
+                index:
+                    match.index,
+
+                input:
+                    match.input,
+
+                groups:
+                    match.groups || null,
+
+                captures:
+                    Array.from(match).slice(1)
+
+            });
+
+
+            if (
+                match[0] === ""
+            ) {
+
+                regex.lastIndex++;
+            }
+
+        }
+
+    } else {
+
+        const match =
+            regex.exec(text);
+
+
+        if (match) {
+
+            matches.push({
+                0:
+                    match[0],
+
+                index:
+                    match.index,
+
+                input:
+                    match.input,
+
+                groups:
+                    match.groups || null,
+
+                captures:
+                    Array.from(match).slice(1)
+
+            });
+
+        }
+
     }
 
 
-    if (milliseconds < 1) {
+    return matches;
+}
 
-        return "< 1 ms";
+
+/* =========================================================
+   MAIN REGEX TEST
+   ========================================================= */
+
+function runRegexTest() {
+
+    if (
+        !regexInputElement ||
+        !testInputElement
+    ) {
+
+        return;
     }
 
 
-    return `${milliseconds.toFixed(2)} ms`;
+    const pattern =
+        regexInputElement.value;
+
+
+    const text =
+        testInputElement.value;
+
+
+    /*
+     * Nothing entered.
+     */
+
+    if (!pattern.trim()) {
+
+        setRegexStatus(
+            "neutral",
+            "Ready"
+        );
+
+        resetResults();
+
+        return;
+    }
+
+
+    const flags =
+        getRegexFlags();
+
+
+    /*
+     * Build regex.
+     */
+
+    let regex;
+
+
+    try {
+
+        regex =
+            new RegExp(
+                pattern,
+                flags
+            );
+
+    } catch (error) {
+
+        setRegexStatus(
+            "invalid",
+            "Invalid"
+        );
+
+
+        if (matchCountElement) {
+
+            matchCountElement.textContent =
+                "0";
+
+        }
+
+
+        if (groupCountElement) {
+
+            groupCountElement.textContent =
+                "0";
+
+        }
+
+
+        if (executionTimeElement) {
+
+            executionTimeElement.textContent =
+                "—";
+
+        }
+
+
+        if (highlightPreviewElement) {
+
+            highlightPreviewElement.innerHTML = `
+
+                <span class="placeholder-text">
+                    Invalid regular expression.
+                </span>
+
+            `;
+
+        }
+
+
+        if (matchResultsElement) {
+
+            matchResultsElement.innerHTML = `
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ⚠️
+                    </div>
+
+                    <h3>Invalid regular expression</h3>
+
+                    <p>
+                        ${escapeRegexHTML(
+                            error.message
+                        )}
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+
+        return;
+    }
+
+
+    /*
+     * Count groups.
+     */
+
+    const groups =
+        countCaptureGroups(
+            pattern
+        );
+
+
+    if (groupCountElement) {
+
+        groupCountElement.textContent =
+            String(groups);
+
+    }
+
+
+    /*
+     * If no test text exists,
+     * regex is still valid.
+     */
+
+    if (!text) {
+
+        setRegexStatus(
+            "valid",
+            "Valid"
+        );
+
+
+        if (matchCountElement) {
+
+            matchCountElement.textContent =
+                "0";
+
+        }
+
+
+        if (executionTimeElement) {
+
+            executionTimeElement.textContent =
+                "—";
+
+        }
+
+
+        if (highlightPreviewElement) {
+
+            highlightPreviewElement.innerHTML = `
+                <span class="placeholder-text">
+                    Enter test text to see matches...
+                </span>
+            `;
+
+        }
+
+
+        if (matchResultsElement) {
+
+            matchResultsElement.innerHTML = `
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🔎
+                    </div>
+
+                    <h3>Ready to test</h3>
+
+                    <p>
+                        Enter some test text to find matches.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+
+        return;
+    }
+
+
+    /*
+     * Execute regex.
+     */
+
+    const startTime =
+        performance.now();
+
+
+    let matches;
+
+
+    try {
+
+        matches =
+            executeRegex(
+                regex,
+                text
+            );
+
+    } catch (error) {
+
+        console.error(
+            "RegexX execution error:",
+            error
+        );
+
+
+        setRegexStatus(
+            "invalid",
+            "Error"
+        );
+
+        return;
+    }
+
+
+    const endTime =
+        performance.now();
+
+
+    const executionTime =
+        endTime - startTime;
+
+
+    /*
+     * Update statistics.
+     */
+
+    if (matchCountElement) {
+
+        matchCountElement.textContent =
+            String(matches.length);
+
+    }
+
+
+    if (executionTimeElement) {
+
+        executionTimeElement.textContent =
+            `${executionTime.toFixed(2)} ms`;
+
+    }
+
+
+    /*
+     * Valid regex with matches.
+     */
+
+    if (matches.length > 0) {
+
+        setRegexStatus(
+            "valid",
+            "Matched"
+        );
+
+    } else {
+
+        setRegexStatus(
+            "valid",
+            "No Match"
+        );
+
+    }
+
+
+    /*
+     * Render UI.
+     */
+
+    renderHighlightPreview(
+        text,
+        matches
+    );
+
+
+    renderMatchResults(
+        matches
+    );
+
+
+    /*
+     * Return useful data for other modules.
+     */
+
+    return {
+        regex,
+        pattern,
+        flags,
+        text,
+        matches,
+        groups,
+        executionTime
+    };
+}
+
+
+/* =========================================================
+   REGEX ENGINE API
+   ========================================================= */
+
+window.RegexEngine = {
+
+    test:
+        runRegexTest,
+
+    execute:
+        executeRegex,
+
+    countGroups:
+        countCaptureGroups,
+
+    getFlags:
+        getRegexFlags
+
+};
+
+
+/* =========================================================
+   GLOBAL COMPATIBILITY
+   ========================================================= */
+
+window.runRegexTest =
+    runRegexTest;
+
+
+/* =========================================================
+   INITIALIZATION
+   ========================================================= */
+
+function initializeRegexEngine() {
+
+    if (
+        regexInputElement &&
+        regexInputElement.value.trim()
+    ) {
+
+        runRegexTest();
+
+    } else {
+
+        resetResults();
+
+    }
+
+}
+
+
+/* =========================================================
+   DOM READY
+   ========================================================= */
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeRegexEngine
+    );
+
+} else {
+
+    initializeRegexEngine();
+
 }
