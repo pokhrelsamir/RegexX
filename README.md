@@ -590,18 +590,26 @@ See the [`LICENSE`](LICENSE) file for more information.
 
 ---
 
-## 👨‍💻 Author
+# 👨‍💻 Author
 
-**Samir Pokhrel**
+<div align="center">
 
-B.Sc. CSIT Student & Developer
+### Samir Pokhrel
 
-### 🔗 Connect
+**B.Sc. CSIT Student | Web Developer | Networking Enthusiast**
 
-* GitHub: `https://github.com/yourusername`
-* Portfolio: `https://yourportfolio.com`
+Built using **HTML, CSS, and JavaScript**
 
-> Replace the placeholder links with your actual profiles.
+<br>
+
+<a href="https://github.com/pokhrelsamir">
+  <img src="https://img.shields.io/badge/GitHub-pokhrelsamir-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+</a>
+<a href="https://www.linkedin.com/in/samirpokhrel/">
+  <img src="https://img.shields.io/badge/LinkedIn-Samir%20Pokhrel-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
+</a>
+
+</div>
 
 ---
 
@@ -616,6 +624,8 @@ If you find RegexX useful:
 * 🤝 Contribute improvements
 
 ---
+
+<div align="center">
 
 ## 🔎 RegexX
 
