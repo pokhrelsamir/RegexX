@@ -540,7 +540,7 @@ Contributions are welcome!
 ### Fork the Repository
 
 ```bash
-git fork https://github.com/yourusername/RegexX
+git fork https://github.com/theonewhowanttofork/RegexX
 ```
 
 ### Create a Branch
