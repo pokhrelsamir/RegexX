@@ -4,15 +4,15 @@
  * Local Storage Manager
  * =========================================================
  *
- * Handles:
- * - Saving regex patterns
- * - Loading saved patterns
- * - Deleting patterns
- * - Clearing all patterns
- * - Copying saved patterns
- * - Loading patterns into Tester
- * - Persistent localStorage storage
- * - Saved-pattern UI rendering
+ * Responsibilities:
+ * - Save regex patterns
+ * - Load saved patterns
+ * - Delete saved patterns
+ * - Clear all saved patterns
+ * - Copy saved patterns
+ * - Load patterns into Tester
+ * - Persist data with localStorage
+ * - Render saved-pattern UI
  * =========================================================
  */
 
@@ -36,13 +36,13 @@ const clearSavedBtn =
 
 
 /* =========================================================
-   STORAGE HELPERS
+   STORAGE
    ========================================================= */
 
 /**
- * Retrieve saved regex patterns from localStorage.
+ * Get saved regex patterns.
  *
- * @returns {Array}
+ * @returns {Array<Object>}
  */
 function getSavedPatterns() {
     try {
@@ -53,18 +53,18 @@ function getSavedPatterns() {
             return [];
         }
 
-        const parsed =
+        const patterns =
             JSON.parse(stored);
 
-        if (!Array.isArray(parsed)) {
+        if (!Array.isArray(patterns)) {
             return [];
         }
 
-        return parsed.filter(
-            item =>
-                item &&
-                typeof item === "object" &&
-                typeof item.pattern === "string"
+        return patterns.filter(
+            pattern =>
+                pattern &&
+                typeof pattern === "object" &&
+                typeof pattern.pattern === "string"
         );
 
     } catch (error) {
@@ -79,9 +79,9 @@ function getSavedPatterns() {
 
 
 /**
- * Persist regex patterns to localStorage.
+ * Save patterns to localStorage.
  *
- * @param {Array} patterns
+ * @param {Array<Object>} patterns
  * @returns {boolean}
  */
 function persistSavedPatterns(patterns) {
@@ -95,7 +95,7 @@ function persistSavedPatterns(patterns) {
 
     } catch (error) {
         console.error(
-            "RegexX: Failed to save patterns.",
+            "RegexX: Failed to persist saved patterns.",
             error
         );
 
@@ -105,22 +105,27 @@ function persistSavedPatterns(patterns) {
 
 
 /**
- * Generate a unique pattern ID.
+ * Generate a unique ID.
  *
  * @returns {string}
  */
 function generateSavedPatternId() {
-    return (
-        `${Date.now().toString(36)}-` +
+    return [
+        Date.now().toString(36),
         Math.random()
             .toString(36)
             .slice(2, 10)
-    );
+    ].join("-");
 }
 
 
+/* =========================================================
+   HTML SECURITY
+   ========================================================= */
+
 /**
- * Escape HTML output.
+ * Escape dynamic values before inserting
+ * them into HTML.
  *
  * @param {*} value
  * @returns {string}
@@ -169,20 +174,29 @@ function savePattern(
     const savedPatterns =
         getSavedPatterns();
 
-    /* Prevent duplicate patterns. */
-    const duplicate =
+
+    /* -------------------------------------------------------
+       Prevent duplicates
+       ------------------------------------------------------- */
+
+    const alreadySaved =
         savedPatterns.some(
             item =>
                 item.pattern === cleanPattern
         );
 
-    if (duplicate) {
+    if (alreadySaved) {
         showStorageToast(
             "This regex is already saved."
         );
 
         return false;
     }
+
+
+    /* -------------------------------------------------------
+       Normalize metadata
+       ------------------------------------------------------- */
 
     const cleanName =
         typeof name === "string" &&
@@ -196,6 +210,11 @@ function savePattern(
             ? description.trim()
             : "Saved RegexX pattern";
 
+
+    /* -------------------------------------------------------
+       Create pattern
+       ------------------------------------------------------- */
+
     const newPattern = {
         id: generateSavedPatternId(),
         name: cleanName,
@@ -204,15 +223,28 @@ function savePattern(
         createdAt: new Date().toISOString()
     };
 
-    savedPatterns.unshift(newPattern);
 
-    if (!persistSavedPatterns(savedPatterns)) {
+    /* -------------------------------------------------------
+       Save newest pattern first
+       ------------------------------------------------------- */
+
+    savedPatterns.unshift(
+        newPattern
+    );
+
+
+    if (
+        !persistSavedPatterns(
+            savedPatterns
+        )
+    ) {
         showStorageToast(
             "Unable to save pattern."
         );
 
         return false;
     }
+
 
     renderSavedPatterns();
 
@@ -225,12 +257,12 @@ function savePattern(
 
 
 /* =========================================================
-   PROMPT SAVE PATTERN
+   PROMPT SAVE
    ========================================================= */
 
 /**
- * Prompt the user for pattern information
- * and save the current tester regex.
+ * Save the current Tester regex
+ * using user-provided metadata.
  */
 function promptSavePattern() {
     if (
@@ -255,6 +287,11 @@ function promptSavePattern() {
         return;
     }
 
+
+    /* -------------------------------------------------------
+       Pattern name
+       ------------------------------------------------------- */
+
     const name =
         window.prompt(
             "Pattern name:",
@@ -265,6 +302,11 @@ function promptSavePattern() {
         return;
     }
 
+
+    /* -------------------------------------------------------
+       Pattern description
+       ------------------------------------------------------- */
+
     const description =
         window.prompt(
             "Description:",
@@ -274,6 +316,7 @@ function promptSavePattern() {
     if (description === null) {
         return;
     }
+
 
     savePattern(
         pattern,
@@ -288,7 +331,7 @@ function promptSavePattern() {
    ========================================================= */
 
 /**
- * Delete one saved pattern.
+ * Delete a saved regex pattern.
  *
  * @param {string} id
  */
@@ -305,6 +348,7 @@ function deleteSavedPattern(id) {
         return;
     }
 
+
     const confirmed =
         window.confirm(
             `Delete "${pattern.name}"?`
@@ -314,18 +358,25 @@ function deleteSavedPattern(id) {
         return;
     }
 
+
     const updatedPatterns =
         savedPatterns.filter(
             item => item.id !== id
         );
 
-    if (!persistSavedPatterns(updatedPatterns)) {
+
+    if (
+        !persistSavedPatterns(
+            updatedPatterns
+        )
+    ) {
         showStorageToast(
             "Unable to delete pattern."
         );
 
         return;
     }
+
 
     renderSavedPatterns();
 
@@ -336,11 +387,11 @@ function deleteSavedPattern(id) {
 
 
 /* =========================================================
-   CLEAR ALL PATTERNS
+   CLEAR ALL
    ========================================================= */
 
 /**
- * Remove all saved regex patterns.
+ * Delete every saved regex pattern.
  */
 function clearAllSavedPatterns() {
     const savedPatterns =
@@ -354,6 +405,7 @@ function clearAllSavedPatterns() {
         return;
     }
 
+
     const confirmed =
         window.confirm(
             "Delete all saved regex patterns?"
@@ -362,6 +414,7 @@ function clearAllSavedPatterns() {
     if (!confirmed) {
         return;
     }
+
 
     try {
         localStorage.removeItem(
@@ -394,22 +447,25 @@ function clearAllSavedPatterns() {
 /**
  * Copy text to clipboard.
  *
- * Uses the modern Clipboard API when available,
- * with a fallback for local development.
- *
  * @param {string} text
  * @returns {Promise<void>}
  */
 async function copyTextToClipboard(text) {
+
+    /* Modern Clipboard API. */
     if (
         navigator.clipboard &&
         window.isSecureContext
     ) {
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(
+            text
+        );
 
         return;
     }
 
+
+    /* Legacy fallback. */
     const textarea =
         document.createElement("textarea");
 
@@ -421,10 +477,12 @@ async function copyTextToClipboard(text) {
     );
 
     textarea.style.position = "fixed";
-    textarea.style.left = "-9999px";
     textarea.style.top = "0";
+    textarea.style.left = "-9999px";
 
-    document.body.appendChild(textarea);
+    document.body.appendChild(
+        textarea
+    );
 
     textarea.focus();
     textarea.select();
@@ -443,7 +501,7 @@ async function copyTextToClipboard(text) {
 
 
 /**
- * Copy a saved regex pattern.
+ * Copy a saved pattern.
  *
  * @param {string} id
  */
@@ -456,6 +514,7 @@ async function copySavedPattern(id) {
     if (!pattern) {
         return;
     }
+
 
     try {
         await copyTextToClipboard(
@@ -480,11 +539,11 @@ async function copySavedPattern(id) {
 
 
 /* =========================================================
-   LOAD PATTERN INTO TESTER
+   LOAD INTO TESTER
    ========================================================= */
 
 /**
- * Load a saved regex into the Tester tab.
+ * Load a saved regex into the Tester.
  *
  * @param {string} id
  */
@@ -498,7 +557,11 @@ function loadSavedPattern(id) {
         return;
     }
 
-    /* Load regex into Tester. */
+
+    /* -------------------------------------------------------
+       Load regex
+       ------------------------------------------------------- */
+
     if (
         typeof regexInput !== "undefined" &&
         regexInput
@@ -507,7 +570,11 @@ function loadSavedPattern(id) {
             pattern.pattern;
     }
 
-    /* Activate Tester navigation. */
+
+    /* -------------------------------------------------------
+       Activate Tester navigation
+       ------------------------------------------------------- */
+
     if (
         typeof navItems !== "undefined"
     ) {
@@ -519,7 +586,11 @@ function loadSavedPattern(id) {
         });
     }
 
-    /* Activate Tester panel. */
+
+    /* -------------------------------------------------------
+       Activate Tester panel
+       ------------------------------------------------------- */
+
     if (
         typeof tabPanels !== "undefined"
     ) {
@@ -531,13 +602,25 @@ function loadSavedPattern(id) {
         });
     }
 
-    /* Execute regex test. */
+
+    /* -------------------------------------------------------
+       Run RegexX engine
+       ------------------------------------------------------- */
+
     if (
+        typeof window.RegexEngine !==
+            "undefined" &&
+        typeof window.RegexEngine.test ===
+            "function"
+    ) {
+        window.RegexEngine.test();
+    } else if (
         typeof runRegexTest ===
         "function"
     ) {
         runRegexTest();
     }
+
 
     showStorageToast(
         `"${pattern.name}" loaded into Tester.`
@@ -546,7 +629,7 @@ function loadSavedPattern(id) {
 
 
 /* =========================================================
-   DATE FORMATTER
+   DATE FORMAT
    ========================================================= */
 
 /**
@@ -583,11 +666,11 @@ function formatSavedDate(dateString) {
 
 
 /* =========================================================
-   RENDER SAVED PATTERNS
+   RENDER
    ========================================================= */
 
 /**
- * Render saved regex patterns.
+ * Render all saved patterns.
  */
 function renderSavedPatterns() {
     if (!savedPatternsContainer) {
@@ -597,10 +680,15 @@ function renderSavedPatterns() {
     const patterns =
         getSavedPatterns();
 
-    /* Empty state. */
+
+    /* -------------------------------------------------------
+       Empty state
+       ------------------------------------------------------- */
+
     if (!patterns.length) {
         savedPatternsContainer.innerHTML = `
             <div class="empty-state">
+
                 <div class="empty-icon">
                     💾
                 </div>
@@ -613,71 +701,90 @@ function renderSavedPatterns() {
                     Your saved regex patterns will
                     appear here.
                 </p>
+
             </div>
         `;
 
         return;
     }
 
+
+    /* -------------------------------------------------------
+       Pattern cards
+       ------------------------------------------------------- */
+
     savedPatternsContainer.innerHTML =
         patterns
             .map(pattern => {
-                const safeId =
+
+                const id =
                     escapeStorageHTML(
                         pattern.id
                     );
 
-                const safeName =
+                const name =
                     escapeStorageHTML(
                         pattern.name ||
                         "Unnamed Pattern"
                     );
 
-                const safeDescription =
+                const description =
                     escapeStorageHTML(
                         pattern.description ||
                         "Saved RegexX pattern"
                     );
 
-                const safePattern =
+                const regex =
                     escapeStorageHTML(
                         pattern.pattern
                     );
 
+                const date =
+                    formatSavedDate(
+                        pattern.createdAt
+                    );
+
+
                 return `
                     <article
                         class="saved-pattern-card"
-                        data-id="${safeId}"
+                        data-id="${id}"
                     >
+
                         <div class="saved-pattern-header">
+
                             <div>
+
                                 <h3>
-                                    ${safeName}
+                                    ${name}
                                 </h3>
 
                                 <span class="saved-date">
-                                    Saved
-                                    ${formatSavedDate(
-                                        pattern.createdAt
-                                    )}
+                                    Saved ${date}
                                 </span>
+
                             </div>
+
                         </div>
 
+
                         <p class="saved-description">
-                            ${safeDescription}
+                            ${description}
                         </p>
+
 
                         <div class="saved-code">
                             <code>
-                                ${safePattern}
+                                ${regex}
                             </code>
                         </div>
 
+
                         <div class="saved-actions">
+
                             <button
                                 class="btn btn-primary btn-small saved-load-btn"
-                                data-id="${safeId}"
+                                data-id="${id}"
                                 type="button"
                             >
                                 🔎 Use in Tester
@@ -685,7 +792,7 @@ function renderSavedPatterns() {
 
                             <button
                                 class="btn btn-secondary btn-small saved-copy-btn"
-                                data-id="${safeId}"
+                                data-id="${id}"
                                 type="button"
                             >
                                 📋 Copy
@@ -693,12 +800,14 @@ function renderSavedPatterns() {
 
                             <button
                                 class="btn btn-danger btn-small saved-delete-btn"
-                                data-id="${safeId}"
+                                data-id="${id}"
                                 type="button"
                             >
                                 🗑️ Delete
                             </button>
+
                         </div>
+
                     </article>
                 `;
             })
@@ -713,12 +822,17 @@ function renderSavedPatterns() {
    ========================================================= */
 
 /**
- * Attach saved-pattern button events.
+ * Attach events to saved-pattern buttons.
  */
 function attachSavedPatternEvents() {
+
+    /* Load buttons. */
     document
-        .querySelectorAll(".saved-load-btn")
+        .querySelectorAll(
+            ".saved-load-btn"
+        )
         .forEach(button => {
+
             button.addEventListener(
                 "click",
                 () => {
@@ -727,11 +841,17 @@ function attachSavedPatternEvents() {
                     );
                 }
             );
+
         });
 
+
+    /* Copy buttons. */
     document
-        .querySelectorAll(".saved-copy-btn")
+        .querySelectorAll(
+            ".saved-copy-btn"
+        )
         .forEach(button => {
+
             button.addEventListener(
                 "click",
                 () => {
@@ -740,11 +860,17 @@ function attachSavedPatternEvents() {
                     );
                 }
             );
+
         });
 
+
+    /* Delete buttons. */
     document
-        .querySelectorAll(".saved-delete-btn")
+        .querySelectorAll(
+            ".saved-delete-btn"
+        )
         .forEach(button => {
+
             button.addEventListener(
                 "click",
                 () => {
@@ -753,6 +879,7 @@ function attachSavedPatternEvents() {
                     );
                 }
             );
+
         });
 }
 
@@ -762,16 +889,16 @@ function attachSavedPatternEvents() {
    ========================================================= */
 
 /**
- * Display a storage-related notification.
+ * Display storage-related notifications.
  *
  * @param {string} message
  */
 function showStorageToast(message) {
     if (
-        typeof showToast ===
+        typeof window.showToast ===
         "function"
     ) {
-        showToast(message);
+        window.showToast(message);
 
         return;
     }
@@ -783,7 +910,7 @@ function showStorageToast(message) {
 
 
 /* =========================================================
-   PUBLIC STORAGE API
+   PUBLIC API
    ========================================================= */
 
 window.RegexStorage = {
@@ -801,6 +928,9 @@ window.RegexStorage = {
    INITIALIZATION
    ========================================================= */
 
+/**
+ * Initialize storage UI.
+ */
 function initializeStorage() {
     renderSavedPatterns();
 }
