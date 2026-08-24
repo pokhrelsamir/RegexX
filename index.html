@@ -32,6 +32,7 @@
         </div>
 
         <div class="header-actions">
+
             <button
                 id="clearBtn"
                 class="btn btn-secondary"
@@ -49,6 +50,7 @@
             >
                 🌙
             </button>
+
         </div>
 
     </header>
@@ -126,7 +128,10 @@
                 <div class="panel-header">
 
                     <div>
-                        <span class="eyebrow">REGULAR EXPRESSION</span>
+                        <span class="eyebrow">
+                            REGULAR EXPRESSION
+                        </span>
+
                         <h2>Pattern</h2>
                     </div>
 
@@ -244,7 +249,10 @@
                 <div class="panel-header">
 
                     <div>
-                        <span class="eyebrow">TEST STRING</span>
+                        <span class="eyebrow">
+                            TEST STRING
+                        </span>
+
                         <h2>Input Text</h2>
                     </div>
 
@@ -450,13 +458,24 @@
 
                 <div class="builder-layout">
 
+
+                    <!-- =====================================
+                         BUILDER SIDEBAR
+                    ====================================== -->
+
                     <div class="builder-sidebar">
 
                         <h3>Components</h3>
 
+
+                        <!-- Character Classes -->
+
                         <div class="builder-group">
 
-                            <span>Character Classes</span>
+                            <span>
+                                Character Classes
+                            </span>
+
 
                             <button
                                 class="builder-btn"
@@ -467,6 +486,7 @@
                                 <small>Digit</small>
                             </button>
 
+
                             <button
                                 class="builder-btn"
                                 data-regex="\w"
@@ -475,6 +495,7 @@
                                 <code>\w</code>
                                 <small>Word</small>
                             </button>
+
 
                             <button
                                 class="builder-btn"
@@ -485,6 +506,7 @@
                                 <small>Whitespace</small>
                             </button>
 
+
                             <button
                                 class="builder-btn"
                                 data-regex="."
@@ -494,12 +516,67 @@
                                 <small>Any Character</small>
                             </button>
 
+
+                            <button
+                                class="builder-btn"
+                                data-regex="[A-Z]"
+                                type="button"
+                            >
+                                <code>[A-Z]</code>
+                                <small>Uppercase</small>
+                            </button>
+
+
+                            <button
+                                class="builder-btn"
+                                data-regex="[a-z]"
+                                type="button"
+                            >
+                                <code>[a-z]</code>
+                                <small>Lowercase</small>
+                            </button>
+
+
+                            <button
+                                class="builder-btn"
+                                data-regex="[0-9]"
+                                type="button"
+                            >
+                                <code>[0-9]</code>
+                                <small>Number</small>
+                            </button>
+
+
+                            <button
+                                class="builder-btn"
+                                data-regex="\D"
+                                type="button"
+                            >
+                                <code>\D</code>
+                                <small>Non-Digit</small>
+                            </button>
+
+
+                            <button
+                                class="builder-btn"
+                                data-regex="\W"
+                                type="button"
+                            >
+                                <code>\W</code>
+                                <small>Non-Word</small>
+                            </button>
+
                         </div>
 
 
+                        <!-- Quantifiers -->
+
                         <div class="builder-group">
 
-                            <span>Quantifiers</span>
+                            <span>
+                                Quantifiers
+                            </span>
+
 
                             <button
                                 class="builder-btn"
@@ -510,6 +587,7 @@
                                 <small>Zero or More</small>
                             </button>
 
+
                             <button
                                 class="builder-btn"
                                 data-regex="+"
@@ -518,6 +596,7 @@
                                 <code>+</code>
                                 <small>One or More</small>
                             </button>
+
 
                             <button
                                 class="builder-btn"
@@ -528,12 +607,47 @@
                                 <small>Optional</small>
                             </button>
 
+
+                            <button
+                                class="builder-btn"
+                                data-regex="{2}"
+                                type="button"
+                            >
+                                <code>{2}</code>
+                                <small>Exactly 2</small>
+                            </button>
+
+
+                            <button
+                                class="builder-btn"
+                                data-regex="{2,}"
+                                type="button"
+                            >
+                                <code>{2,}</code>
+                                <small>2 or More</small>
+                            </button>
+
+
+                            <button
+                                class="builder-btn"
+                                data-regex="{2,5}"
+                                type="button"
+                            >
+                                <code>{2,5}</code>
+                                <small>2 to 5</small>
+                            </button>
+
                         </div>
 
 
+                        <!-- Anchors -->
+
                         <div class="builder-group">
 
-                            <span>Anchors</span>
+                            <span>
+                                Anchors
+                            </span>
+
 
                             <button
                                 class="builder-btn"
@@ -544,6 +658,7 @@
                                 <small>Start</small>
                             </button>
 
+
                             <button
                                 class="builder-btn"
                                 data-regex="$"
@@ -552,6 +667,7 @@
                                 <code>$</code>
                                 <small>End</small>
                             </button>
+
 
                             <button
                                 class="builder-btn"
@@ -562,10 +678,65 @@
                                 <small>Word Boundary</small>
                             </button>
 
+
+                            <button
+                                class="builder-btn"
+                                data-regex="\B"
+                                type="button"
+                            >
+                                <code>\B</code>
+                                <small>Non-Boundary</small>
+                            </button>
+
+                        </div>
+
+
+                        <!-- Groups -->
+
+                        <div class="builder-group">
+
+                            <span>
+                                Groups & Logic
+                            </span>
+
+
+                            <button
+                                class="builder-btn"
+                                data-regex="("
+                                type="button"
+                            >
+                                <code>( )</code>
+                                <small>Capture Group</small>
+                            </button>
+
+
+                            <button
+                                class="builder-btn"
+                                data-regex="(?:"
+                                type="button"
+                            >
+                                <code>(?: )</code>
+                                <small>Non-Capturing</small>
+                            </button>
+
+
+                            <button
+                                class="builder-btn"
+                                data-regex="|"
+                                type="button"
+                            >
+                                <code>|</code>
+                                <small>OR</small>
+                            </button>
+
                         </div>
 
                     </div>
 
+
+                    <!-- =====================================
+                         BUILDER WORKSPACE
+                    ====================================== -->
 
                     <div class="builder-workspace">
 
@@ -573,17 +744,20 @@
                             Generated Regex
                         </label>
 
+
                         <div class="builder-output">
 
                             <code id="builderOutput">
-                                ^
+                                Start building your regex...
                             </code>
+
 
                             <button
                                 id="builderCopyBtn"
                                 class="icon-btn"
                                 type="button"
                                 title="Copy regex"
+                                aria-label="Copy generated regex"
                             >
                                 📋
                             </button>
@@ -600,6 +774,7 @@
                             >
                                 Clear
                             </button>
+
 
                             <button
                                 id="builderUseBtn"
@@ -689,6 +864,7 @@
                         spellcheck="false"
                     >
 
+
                     <button
                         id="explainBtn"
                         class="btn btn-primary"
@@ -747,6 +923,7 @@
 
                         <h2>Saved Patterns</h2>
                     </div>
+
 
                     <button
                         id="clearSavedBtn"
