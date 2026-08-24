@@ -15,11 +15,9 @@
  * - Copy regex
  * - Save regex
  * - Toast notifications
- * - Application initialization
- *
- * Builder functionality is handled by builder.js.
- * Regex testing is handled by regex-engine.js.
- * Storage is handled by storage.js.
+ * - Integration with Regex Engine
+ * - Integration with Builder
+ * - Integration with Storage
  */
 
 
@@ -56,9 +54,6 @@ const flagPreview =
 
 const regexStatus =
     document.getElementById("regexStatus");
-
-const statusValue =
-    document.getElementById("statusValue");
 
 const toast =
     document.getElementById("toast");
@@ -110,9 +105,10 @@ navItems.forEach(nav => {
         "click",
         () => {
 
-            activateTab(
-                nav.dataset.tab
-            );
+            const tabId =
+                nav.dataset.tab;
+
+            activateTab(tabId);
 
         }
     );
@@ -160,49 +156,6 @@ function updateFlagPreview() {
 
 
 /* =========================================================
-   RUN REGEX TEST
-   ========================================================= */
-
-function runRegexTest() {
-
-    if (
-        window.RegexEngine &&
-        typeof window.RegexEngine.test ===
-        "function"
-    ) {
-
-        return window.RegexEngine.test(
-            regexInput
-                ? regexInput.value
-                : "",
-            testInput
-                ? testInput.value
-                : "",
-            getActiveFlags()
-        );
-
-    }
-
-
-    console.warn(
-        "RegexX: RegexEngine.test() is unavailable."
-    );
-
-
-    return null;
-}
-
-
-/*
- * Make the application test function
- * available to other modules.
- */
-
-window.runRegexTest =
-    runRegexTest;
-
-
-/* =========================================================
    FLAG EVENTS
    ========================================================= */
 
@@ -227,6 +180,68 @@ document
 
 
 /* =========================================================
+   RUN REGEX TEST
+   ========================================================= */
+
+function runRegexTest() {
+
+    /*
+     * Preferred Regex Engine API
+     */
+
+    if (
+        window.RegexEngine &&
+        typeof window.RegexEngine.test ===
+        "function"
+    ) {
+
+        return window.RegexEngine.test(
+            regexInput
+                ? regexInput.value
+                : "",
+
+            testInput
+                ? testInput.value
+                : "",
+
+            getActiveFlags()
+        );
+    }
+
+
+    /*
+     * Compatibility fallback.
+     */
+
+    if (
+        typeof window.regexEngineTest ===
+        "function"
+    ) {
+
+        return window.regexEngineTest(
+            regexInput
+                ? regexInput.value
+                : "",
+
+            testInput
+                ? testInput.value
+                : "",
+
+            getActiveFlags()
+        );
+    }
+
+
+    console.warn(
+        "RegexX: Regex Engine is not available."
+    );
+
+
+    return null;
+}
+
+
+/* =========================================================
    REGEX INPUT EVENTS
    ========================================================= */
 
@@ -235,6 +250,8 @@ if (regexInput) {
     regexInput.addEventListener(
         "input",
         () => {
+
+            updateFlagPreview();
 
             runRegexTest();
 
@@ -269,17 +286,21 @@ if (testInput) {
 function clearApplication() {
 
     if (regexInput) {
+
         regexInput.value = "";
+
     }
 
 
     if (testInput) {
+
         testInput.value = "";
+
     }
 
 
     /*
-     * Restore default flag.
+     * Restore default flags.
      */
 
     const flagInputs =
@@ -324,10 +345,6 @@ function clearApplication() {
     );
 
 
-    /*
-     * Reset status.
-     */
-
     if (regexStatus) {
 
         regexStatus.textContent =
@@ -340,7 +357,7 @@ function clearApplication() {
 
 
     /*
-     * Reset highlight preview.
+     * Reset highlighted preview.
      */
 
     const preview =
@@ -380,7 +397,9 @@ function clearApplication() {
                     🔎
                 </div>
 
-                <h3>No matches yet</h3>
+                <h3>
+                    No matches yet
+                </h3>
 
                 <p>
                     Enter a regex pattern and test text
@@ -444,7 +463,7 @@ user@invalid`;
 
 
     /*
-     * Global + Ignore Case.
+     * Global + Ignore Case
      */
 
     document
@@ -559,45 +578,56 @@ const THEME_KEY =
 
 function applyTheme(theme) {
 
-    const isDark =
-        theme === "dark";
+    if (theme === "dark") {
 
-
-    document.body.classList.toggle(
-        "dark-theme",
-        isDark
-    );
-
-
-    if (themeBtn) {
-
-        themeBtn.textContent =
-            isDark
-                ? "☀️"
-                : "🌙";
-
-
-        themeBtn.title =
-            isDark
-                ? "Switch to light theme"
-                : "Switch to dark theme";
-
-
-        themeBtn.setAttribute(
-            "aria-label",
-            isDark
-                ? "Switch to light theme"
-                : "Switch to dark theme"
+        document.body.classList.add(
+            "dark-theme"
         );
+
+
+        if (themeBtn) {
+
+            themeBtn.textContent =
+                "☀️";
+
+            themeBtn.title =
+                "Switch to light theme";
+
+            themeBtn.setAttribute(
+                "aria-label",
+                "Switch to light theme"
+            );
+
+        }
+
+    } else {
+
+        document.body.classList.remove(
+            "dark-theme"
+        );
+
+
+        if (themeBtn) {
+
+            themeBtn.textContent =
+                "🌙";
+
+            themeBtn.title =
+                "Switch to dark theme";
+
+            themeBtn.setAttribute(
+                "aria-label",
+                "Switch to dark theme"
+            );
+
+        }
 
     }
 
 
     localStorage.setItem(
         THEME_KEY,
-        isDark
-            ? "dark"
-            : "light"
+        theme
     );
 }
 
@@ -661,6 +691,10 @@ function initializeTheme() {
     }
 
 
+    /*
+     * Respect system preference.
+     */
+
     const prefersDark =
         window.matchMedia &&
         window.matchMedia(
@@ -709,6 +743,7 @@ document.addEventListener(
 
         /*
          * Ctrl/Cmd + Enter
+         * Run regex test.
          */
 
         if (
@@ -730,6 +765,7 @@ document.addEventListener(
 
         /*
          * Ctrl/Cmd + Shift + S
+         * Save current regex.
          */
 
         if (
@@ -798,7 +834,7 @@ function showToast(message) {
 
 
 /*
- * Expose globally.
+ * Expose toast globally.
  */
 
 window.showToast =
@@ -826,7 +862,6 @@ function setText(
             value;
 
     }
-
 }
 
 
@@ -842,7 +877,7 @@ function initializeApp() {
 
 
     /*
-     * Start on Tester.
+     * Tester is the initial tab.
      */
 
     activateTab(
@@ -851,7 +886,7 @@ function initializeApp() {
 
 
     /*
-     * Initialize storage.
+     * Initialize storage if available.
      */
 
     if (
@@ -865,7 +900,7 @@ function initializeApp() {
 
 
     /*
-     * Run initial test if input exists.
+     * Run initial test if values exist.
      */
 
     if (
