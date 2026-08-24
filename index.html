@@ -11,6 +11,11 @@
         content="RegexX is a lightweight regular expression tester, builder, and pattern toolkit."
     >
 
+    <meta
+        name="theme-color"
+        content="#6366f1"
+    >
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -23,23 +28,46 @@
     <header class="app-header">
 
         <div class="brand">
-            <div class="brand-icon">🔎</div>
+
+            <div class="brand-icon">
+                🔎
+            </div>
 
             <div>
                 <h1>RegexX</h1>
                 <p>Regular Expression Tester & Builder</p>
             </div>
+
         </div>
 
+
         <div class="header-actions">
+
+            <!-- Save Current Regex -->
+
+            <button
+                id="saveBtn"
+                class="btn btn-primary"
+                type="button"
+                title="Save current regex"
+            >
+                💾 Save
+            </button>
+
+
+            <!-- Clear Tester -->
 
             <button
                 id="clearBtn"
                 class="btn btn-secondary"
                 type="button"
+                title="Clear tester"
             >
                 Clear
             </button>
+
+
+            <!-- Theme -->
 
             <button
                 id="themeBtn"
@@ -60,7 +88,10 @@
          NAVIGATION
     ====================================================== -->
 
-    <nav class="tool-nav">
+    <nav
+        class="tool-nav"
+        aria-label="RegexX tools"
+    >
 
         <button
             class="nav-item active"
@@ -70,6 +101,7 @@
             🔎 Tester
         </button>
 
+
         <button
             class="nav-item"
             data-tab="builder"
@@ -77,6 +109,7 @@
         >
             🧩 Builder
         </button>
+
 
         <button
             class="nav-item"
@@ -86,6 +119,7 @@
             📚 Patterns
         </button>
 
+
         <button
             class="nav-item"
             data-tab="explain"
@@ -93,6 +127,7 @@
         >
             🧠 Explain
         </button>
+
 
         <button
             class="nav-item"
@@ -128,12 +163,15 @@
                 <div class="panel-header">
 
                     <div>
+
                         <span class="eyebrow">
                             REGULAR EXPRESSION
                         </span>
 
                         <h2>Pattern</h2>
+
                     </div>
+
 
                     <span
                         id="regexStatus"
@@ -147,7 +185,10 @@
 
                 <div class="regex-input-wrapper">
 
-                    <span class="regex-slash">/</span>
+                    <span class="regex-slash">
+                        /
+                    </span>
+
 
                     <input
                         id="regexInput"
@@ -158,7 +199,11 @@
                         aria-label="Regular expression"
                     >
 
-                    <span class="regex-slash">/</span>
+
+                    <span class="regex-slash">
+                        /
+                    </span>
+
 
                     <span
                         id="flagPreview"
@@ -178,61 +223,103 @@
                         FLAGS
                     </span>
 
+
                     <div class="flags">
 
                         <label class="flag-option">
+
                             <input
                                 type="checkbox"
                                 value="g"
                                 checked
                             >
+
                             <span>g</span>
-                            <small>Global</small>
+
+                            <small>
+                                Global
+                            </small>
+
                         </label>
 
+
                         <label class="flag-option">
+
                             <input
                                 type="checkbox"
                                 value="i"
                             >
+
                             <span>i</span>
-                            <small>Ignore Case</small>
+
+                            <small>
+                                Ignore Case
+                            </small>
+
                         </label>
 
+
                         <label class="flag-option">
+
                             <input
                                 type="checkbox"
                                 value="m"
                             >
+
                             <span>m</span>
-                            <small>Multiline</small>
+
+                            <small>
+                                Multiline
+                            </small>
+
                         </label>
 
+
                         <label class="flag-option">
+
                             <input
                                 type="checkbox"
                                 value="s"
                             >
+
                             <span>s</span>
-                            <small>Dot All</small>
+
+                            <small>
+                                Dot All
+                            </small>
+
                         </label>
 
+
                         <label class="flag-option">
+
                             <input
                                 type="checkbox"
                                 value="u"
                             >
+
                             <span>u</span>
-                            <small>Unicode</small>
+
+                            <small>
+                                Unicode
+                            </small>
+
                         </label>
 
+
                         <label class="flag-option">
+
                             <input
                                 type="checkbox"
                                 value="y"
                             >
+
                             <span>y</span>
-                            <small>Sticky</small>
+
+                            <small>
+                                Sticky
+                            </small>
+
                         </label>
 
                     </div>
@@ -249,12 +336,15 @@
                 <div class="panel-header">
 
                     <div>
+
                         <span class="eyebrow">
                             TEST STRING
                         </span>
 
                         <h2>Input Text</h2>
+
                     </div>
+
 
                     <button
                         id="sampleBtn"
@@ -283,9 +373,12 @@
 
                 <div class="stat-card">
 
-                    <span class="stat-icon">✓</span>
+                    <span class="stat-icon">
+                        ✓
+                    </span>
 
                     <div>
+
                         <span class="stat-label">
                             STATUS
                         </span>
@@ -293,6 +386,7 @@
                         <strong id="statusValue">
                             Ready
                         </strong>
+
                     </div>
 
                 </div>
@@ -300,9 +394,12 @@
 
                 <div class="stat-card">
 
-                    <span class="stat-icon">🔍</span>
+                    <span class="stat-icon">
+                        🔍
+                    </span>
 
                     <div>
+
                         <span class="stat-label">
                             MATCHES
                         </span>
@@ -310,6 +407,7 @@
                         <strong id="matchCount">
                             0
                         </strong>
+
                     </div>
 
                 </div>
@@ -317,9 +415,12 @@
 
                 <div class="stat-card">
 
-                    <span class="stat-icon">🧩</span>
+                    <span class="stat-icon">
+                        🧩
+                    </span>
 
                     <div>
+
                         <span class="stat-label">
                             GROUPS
                         </span>
@@ -327,6 +428,7 @@
                         <strong id="groupCount">
                             0
                         </strong>
+
                     </div>
 
                 </div>
@@ -334,9 +436,12 @@
 
                 <div class="stat-card">
 
-                    <span class="stat-icon">⚡</span>
+                    <span class="stat-icon">
+                        ⚡
+                    </span>
 
                     <div>
+
                         <span class="stat-label">
                             EXECUTION
                         </span>
@@ -344,6 +449,7 @@
                         <strong id="executionTime">
                             —
                         </strong>
+
                     </div>
 
                 </div>
@@ -358,11 +464,15 @@
                 <div class="panel-header">
 
                     <div>
+
                         <span class="eyebrow">
                             LIVE PREVIEW
                         </span>
 
-                        <h2>Highlighted Matches</h2>
+                        <h2>
+                            Highlighted Matches
+                        </h2>
+
                     </div>
 
                 </div>
@@ -372,9 +482,11 @@
                     id="highlightPreview"
                     class="highlight-preview"
                 >
+
                     <span class="placeholder-text">
                         Matches will appear here...
                     </span>
+
                 </div>
 
             </div>
@@ -387,12 +499,17 @@
                 <div class="panel-header">
 
                     <div>
+
                         <span class="eyebrow">
                             RESULTS
                         </span>
 
-                        <h2>Match Details</h2>
+                        <h2>
+                            Match Details
+                        </h2>
+
                     </div>
+
 
                     <button
                         id="copyBtn"
@@ -416,7 +533,9 @@
                             🔎
                         </div>
 
-                        <h3>No matches yet</h3>
+                        <h3>
+                            No matches yet
+                        </h3>
 
                         <p>
                             Enter a regex pattern and test text
@@ -446,11 +565,15 @@
                 <div class="panel-header">
 
                     <div>
+
                         <span class="eyebrow">
                             REGEX BUILDER
                         </span>
 
-                        <h2>Build Your Pattern</h2>
+                        <h2>
+                            Build Your Pattern
+                        </h2>
+
                     </div>
 
                 </div>
@@ -465,7 +588,9 @@
 
                     <div class="builder-sidebar">
 
-                        <h3>Components</h3>
+                        <h3>
+                            Components
+                        </h3>
 
 
                         <!-- Character Classes -->
@@ -483,7 +608,9 @@
                                 type="button"
                             >
                                 <code>\d</code>
-                                <small>Digit</small>
+                                <small>
+                                    Digit
+                                </small>
                             </button>
 
 
@@ -493,7 +620,9 @@
                                 type="button"
                             >
                                 <code>\w</code>
-                                <small>Word</small>
+                                <small>
+                                    Word
+                                </small>
                             </button>
 
 
@@ -503,7 +632,9 @@
                                 type="button"
                             >
                                 <code>\s</code>
-                                <small>Whitespace</small>
+                                <small>
+                                    Whitespace
+                                </small>
                             </button>
 
 
@@ -513,7 +644,9 @@
                                 type="button"
                             >
                                 <code>.</code>
-                                <small>Any Character</small>
+                                <small>
+                                    Any Character
+                                </small>
                             </button>
 
 
@@ -523,7 +656,9 @@
                                 type="button"
                             >
                                 <code>[A-Z]</code>
-                                <small>Uppercase</small>
+                                <small>
+                                    Uppercase
+                                </small>
                             </button>
 
 
@@ -533,7 +668,9 @@
                                 type="button"
                             >
                                 <code>[a-z]</code>
-                                <small>Lowercase</small>
+                                <small>
+                                    Lowercase
+                                </small>
                             </button>
 
 
@@ -543,7 +680,9 @@
                                 type="button"
                             >
                                 <code>[0-9]</code>
-                                <small>Number</small>
+                                <small>
+                                    Number
+                                </small>
                             </button>
 
 
@@ -553,7 +692,9 @@
                                 type="button"
                             >
                                 <code>\D</code>
-                                <small>Non-Digit</small>
+                                <small>
+                                    Non-Digit
+                                </small>
                             </button>
 
 
@@ -563,7 +704,9 @@
                                 type="button"
                             >
                                 <code>\W</code>
-                                <small>Non-Word</small>
+                                <small>
+                                    Non-Word
+                                </small>
                             </button>
 
                         </div>
@@ -584,7 +727,9 @@
                                 type="button"
                             >
                                 <code>*</code>
-                                <small>Zero or More</small>
+                                <small>
+                                    Zero or More
+                                </small>
                             </button>
 
 
@@ -594,7 +739,9 @@
                                 type="button"
                             >
                                 <code>+</code>
-                                <small>One or More</small>
+                                <small>
+                                    One or More
+                                </small>
                             </button>
 
 
@@ -604,7 +751,9 @@
                                 type="button"
                             >
                                 <code>?</code>
-                                <small>Optional</small>
+                                <small>
+                                    Optional
+                                </small>
                             </button>
 
 
@@ -614,7 +763,9 @@
                                 type="button"
                             >
                                 <code>{2}</code>
-                                <small>Exactly 2</small>
+                                <small>
+                                    Exactly 2
+                                </small>
                             </button>
 
 
@@ -624,7 +775,9 @@
                                 type="button"
                             >
                                 <code>{2,}</code>
-                                <small>2 or More</small>
+                                <small>
+                                    2 or More
+                                </small>
                             </button>
 
 
@@ -634,7 +787,9 @@
                                 type="button"
                             >
                                 <code>{2,5}</code>
-                                <small>2 to 5</small>
+                                <small>
+                                    2 to 5
+                                </small>
                             </button>
 
                         </div>
@@ -655,7 +810,9 @@
                                 type="button"
                             >
                                 <code>^</code>
-                                <small>Start</small>
+                                <small>
+                                    Start
+                                </small>
                             </button>
 
 
@@ -665,7 +822,9 @@
                                 type="button"
                             >
                                 <code>$</code>
-                                <small>End</small>
+                                <small>
+                                    End
+                                </small>
                             </button>
 
 
@@ -675,7 +834,9 @@
                                 type="button"
                             >
                                 <code>\b</code>
-                                <small>Word Boundary</small>
+                                <small>
+                                    Word Boundary
+                                </small>
                             </button>
 
 
@@ -685,7 +846,9 @@
                                 type="button"
                             >
                                 <code>\B</code>
-                                <small>Non-Boundary</small>
+                                <small>
+                                    Non-Boundary
+                                </small>
                             </button>
 
                         </div>
@@ -706,7 +869,9 @@
                                 type="button"
                             >
                                 <code>( )</code>
-                                <small>Capture Group</small>
+                                <small>
+                                    Capture Group
+                                </small>
                             </button>
 
 
@@ -716,7 +881,9 @@
                                 type="button"
                             >
                                 <code>(?: )</code>
-                                <small>Non-Capturing</small>
+                                <small>
+                                    Non-Capturing
+                                </small>
                             </button>
 
 
@@ -726,7 +893,9 @@
                                 type="button"
                             >
                                 <code>|</code>
-                                <small>OR</small>
+                                <small>
+                                    OR
+                                </small>
                             </button>
 
                         </div>
@@ -809,11 +978,15 @@
                 <div class="panel-header">
 
                     <div>
+
                         <span class="eyebrow">
                             PATTERN LIBRARY
                         </span>
 
-                        <h2>Common Regex Patterns</h2>
+                        <h2>
+                            Common Regex Patterns
+                        </h2>
+
                     </div>
 
                 </div>
@@ -823,7 +996,7 @@
                     id="patternGrid"
                     class="pattern-grid"
                 >
-                    <!-- Generated by JavaScript -->
+                    <!-- Generated by patterns.js -->
                 </div>
 
             </div>
@@ -845,11 +1018,15 @@
                 <div class="panel-header">
 
                     <div>
+
                         <span class="eyebrow">
                             REGEX EXPLAINER
                         </span>
 
-                        <h2>Understand Your Pattern</h2>
+                        <h2>
+                            Understand Your Pattern
+                        </h2>
+
                     </div>
 
                 </div>
@@ -862,6 +1039,7 @@
                         type="text"
                         placeholder="Enter a regex pattern..."
                         spellcheck="false"
+                        autocomplete="off"
                     >
 
 
@@ -887,7 +1065,9 @@
                             🧠
                         </div>
 
-                        <h3>Regex explanation</h3>
+                        <h3>
+                            Regex explanation
+                        </h3>
 
                         <p>
                             Enter a pattern above to see how
@@ -917,11 +1097,15 @@
                 <div class="panel-header">
 
                     <div>
+
                         <span class="eyebrow">
                             LOCAL STORAGE
                         </span>
 
-                        <h2>Saved Patterns</h2>
+                        <h2>
+                            Saved Patterns
+                        </h2>
+
                     </div>
 
 
@@ -947,7 +1131,9 @@
                             💾
                         </div>
 
-                        <h3>No saved patterns</h3>
+                        <h3>
+                            No saved patterns
+                        </h3>
 
                         <p>
                             Your saved regex patterns will
