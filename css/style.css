@@ -2349,3 +2349,490 @@ body.dark-theme ::-webkit-scrollbar-thumb:hover {
         font-size: 11px;
     }
 }
+
+
+/* =========================================================
+   PATTERN LIBRARY TOOLBAR
+   ========================================================= */
+
+.pattern-library-toolbar {
+    display: grid;
+    grid-template-columns: 1fr minmax(280px, 360px);
+
+    align-items: center;
+
+    gap: 28px;
+
+    margin-bottom: 24px;
+}
+
+
+/* =========================================================
+   PATTERN LIBRARY HEADING
+   ========================================================= */
+
+.pattern-library-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+.pattern-library-icon {
+    width: 48px;
+    height: 48px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary-soft),
+            #e0e7ff
+        );
+
+    border: 1px solid #c7d2fe;
+
+    font-size: 22px;
+
+    box-shadow:
+        0 4px 12px rgba(99, 102, 241, 0.10);
+}
+
+.pattern-library-heading h2 {
+    margin-top: 2px;
+
+    font-size: 20px;
+    font-weight: 850;
+
+    letter-spacing: -0.5px;
+}
+
+.pattern-library-heading p {
+    margin-top: 3px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   PATTERN SEARCH
+   ========================================================= */
+
+.pattern-search {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    min-height: 46px;
+
+    background: var(--surface-soft);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition),
+        background var(--transition);
+}
+
+.pattern-search:focus-within {
+    background: var(--surface);
+
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 4px rgba(99, 102, 241, 0.08);
+}
+
+.pattern-search-icon {
+    margin-left: 14px;
+
+    color: var(--text-muted);
+
+    font-size: 15px;
+}
+
+.pattern-search input {
+    width: 100%;
+
+    min-width: 0;
+
+    padding: 0 10px;
+
+    background: transparent;
+
+    border: none;
+    outline: none;
+
+    color: var(--text);
+
+    font-size: 13px;
+}
+
+.pattern-search input::placeholder {
+    color: var(--text-muted);
+}
+
+.pattern-search kbd {
+    margin-right: 10px;
+
+    padding: 3px 7px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 5px;
+
+    color: var(--text-muted);
+
+    font-family:
+        "JetBrains Mono",
+        Consolas,
+        monospace;
+
+    font-size: 9px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CATEGORY FILTERS
+   ========================================================= */
+
+.pattern-categories {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    padding: 14px;
+
+    background: var(--surface-soft);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+}
+
+.category-filter {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    min-height: 36px;
+
+    padding: 0 12px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
+    font-weight: 750;
+
+    white-space: nowrap;
+
+    transition:
+        color var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
+}
+
+.category-filter span:first-child {
+    font-size: 14px;
+}
+
+.category-filter:hover {
+    color: var(--primary);
+
+    background: var(--primary-soft);
+
+    border-color: #c7d2fe;
+
+    transform: translateY(-1px);
+}
+
+.category-filter.active {
+    color: white;
+
+    background: var(--primary);
+
+    border-color: var(--primary);
+
+    box-shadow:
+        0 4px 10px rgba(99, 102, 241, 0.20);
+}
+
+.category-filter.active:hover {
+    color: white;
+
+    background: var(--primary-dark);
+
+    border-color: var(--primary-dark);
+}
+
+
+/* =========================================================
+   PATTERN RESULTS HEADER
+   ========================================================= */
+
+.pattern-results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin: 24px 2px 14px;
+}
+
+.pattern-results-header > div {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+.pattern-results-title {
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.pattern-count {
+    padding: 3px 8px;
+
+    background: var(--primary-soft);
+
+    border-radius: 999px;
+
+    color: var(--primary);
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.pattern-hint {
+    color: var(--text-muted);
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   PATTERN CARDS - POLISHED
+   ========================================================= */
+
+.pattern-card {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 20px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    transition:
+        border-color var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
+}
+
+.pattern-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 3px;
+
+    background: var(--primary);
+
+    opacity: 0;
+
+    transition: opacity var(--transition);
+}
+
+.pattern-card:hover {
+    border-color: #c7d2fe;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+.pattern-card:hover::before {
+    opacity: 1;
+}
+
+.pattern-card h3 {
+    font-size: 15px;
+
+    letter-spacing: -0.2px;
+}
+
+.pattern-card p {
+    min-height: 34px;
+
+    line-height: 1.5;
+}
+
+.pattern-code {
+    position: relative;
+
+    padding: 12px 13px;
+
+    background: #0f172a;
+
+    border: 1px solid #1e293b;
+
+    border-radius: 9px;
+
+    color: #a5b4fc;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.pattern-card .btn {
+    margin-top: auto;
+}
+
+
+/* =========================================================
+   DARK THEME
+   ========================================================= */
+
+body.dark-theme .pattern-library-icon {
+    background: var(--primary-soft);
+
+    border-color: #3730a3;
+}
+
+body.dark-theme .pattern-categories {
+    background: var(--surface-soft);
+}
+
+body.dark-theme .category-filter {
+    background: var(--surface);
+
+    border-color: var(--border);
+}
+
+body.dark-theme .category-filter:hover {
+    background: var(--primary-soft);
+
+    border-color: #4338ca;
+}
+
+body.dark-theme .category-filter.active {
+    background: var(--primary);
+
+    border-color: var(--primary);
+
+    color: white;
+}
+
+body.dark-theme .pattern-search kbd {
+    background: var(--surface-soft);
+}
+
+
+/* =========================================================
+   PATTERN RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .pattern-library-toolbar {
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+    .pattern-search {
+        width: 100%;
+    }
+
+    .pattern-results-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 7px;
+    }
+}
+
+
+@media (max-width: 520px) {
+
+    .pattern-library-heading {
+        align-items: flex-start;
+    }
+
+    .pattern-library-icon {
+        width: 42px;
+        height: 42px;
+
+        border-radius: 11px;
+
+        font-size: 18px;
+    }
+
+    .pattern-library-heading h2 {
+        font-size: 18px;
+    }
+
+    .pattern-library-heading p {
+        font-size: 11px;
+    }
+
+    .pattern-categories {
+        gap: 6px;
+
+        padding: 10px;
+    }
+
+    .category-filter {
+        min-height: 34px;
+
+        padding: 0 9px;
+
+        font-size: 10px;
+    }
+
+    .category-filter span:first-child {
+        font-size: 12px;
+    }
+
+    .pattern-search kbd {
+        display: none;
+    }
+}
