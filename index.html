@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RegexX — Regular Expression Tester & Builder</title>
+
+    <meta
+        name="description"
+        content="RegexX is a lightweight regular expression tester, builder, and pattern toolkit."
+    >
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="app-header">
+
+        <div class="brand">
+            <div class="brand-icon">🔎</div>
+
+            <div>
+                <h1>RegexX</h1>
+                <p>Regular Expression Tester & Builder</p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+            >
+                Clear
+            </button>
+
+            <button
+                id="themeBtn"
+                class="icon-btn"
+                type="button"
+                title="Toggle theme"
+                aria-label="Toggle theme"
+            >
+                🌙
+            </button>
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
+    <nav class="tool-nav">
+
+        <button
+            class="nav-item active"
+            data-tab="tester"
+            type="button"
+        >
+            🔎 Tester
+        </button>
+
+        <button
+            class="nav-item"
+            data-tab="builder"
+            type="button"
+        >
+            🧩 Builder
+        </button>
+
+        <button
+            class="nav-item"
+            data-tab="patterns"
+            type="button"
+        >
+            📚 Patterns
+        </button>
+
+        <button
+            class="nav-item"
+            data-tab="explain"
+            type="button"
+        >
+            🧠 Explain
+        </button>
+
+        <button
+            class="nav-item"
+            data-tab="saved"
+            type="button"
+        >
+            💾 Saved
+        </button>
+
+    </nav>
+
+
+    <!-- =====================================================
+         MAIN APPLICATION
+    ====================================================== -->
+
+    <main class="app-container">
+
+
+        <!-- =================================================
+             TESTER TAB
+        ================================================== -->
+
+        <section
+            id="tester"
+            class="tab-panel active"
+        >
+
+            <!-- Regex Pattern -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="eyebrow">REGULAR EXPRESSION</span>
+                        <h2>Pattern</h2>
+                    </div>
+
+                    <span
+                        id="regexStatus"
+                        class="status neutral"
+                    >
+                        Ready
+                    </span>
+
+                </div>
+
+
+                <div class="regex-input-wrapper">
+
+                    <span class="regex-slash">/</span>
+
+                    <input
+                        id="regexInput"
+                        type="text"
+                        autocomplete="off"
+                        spellcheck="false"
+                        placeholder="Enter your regular expression..."
+                        aria-label="Regular expression"
+                    >
+
+                    <span class="regex-slash">/</span>
+
+                    <span
+                        id="flagPreview"
+                        class="flag-preview"
+                    >
+                        g
+                    </span>
+
+                </div>
+
+
+                <!-- Flags -->
+
+                <div class="flags-section">
+
+                    <span class="section-label">
+                        FLAGS
+                    </span>
+
+                    <div class="flags">
+
+                        <label class="flag-option">
+                            <input
+                                type="checkbox"
+                                value="g"
+                                checked
+                            >
+                            <span>g</span>
+                            <small>Global</small>
+                        </label>
+
+                        <label class="flag-option">
+                            <input
+                                type="checkbox"
+                                value="i"
+                            >
+                            <span>i</span>
+                            <small>Ignore Case</small>
+                        </label>
+
+                        <label class="flag-option">
+                            <input
+                                type="checkbox"
+                                value="m"
+                            >
+                            <span>m</span>
+                            <small>Multiline</small>
+                        </label>
+
+                        <label class="flag-option">
+                            <input
+                                type="checkbox"
+                                value="s"
+                            >
+                            <span>s</span>
+                            <small>Dot All</small>
+                        </label>
+
+                        <label class="flag-option">
+                            <input
+                                type="checkbox"
+                                value="u"
+                            >
+                            <span>u</span>
+                            <small>Unicode</small>
+                        </label>
+
+                        <label class="flag-option">
+                            <input
+                                type="checkbox"
+                                value="y"
+                            >
+                            <span>y</span>
+                            <small>Sticky</small>
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Test Text -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="eyebrow">TEST STRING</span>
+                        <h2>Input Text</h2>
+                    </div>
+
+                    <button
+                        id="sampleBtn"
+                        class="btn btn-secondary btn-small"
+                        type="button"
+                    >
+                        Load Sample
+                    </button>
+
+                </div>
+
+
+                <textarea
+                    id="testInput"
+                    class="test-input"
+                    placeholder="Enter text to test your regular expression..."
+                    spellcheck="false"
+                ></textarea>
+
+            </div>
+
+
+            <!-- Statistics -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <span class="stat-icon">✓</span>
+
+                    <div>
+                        <span class="stat-label">
+                            STATUS
+                        </span>
+
+                        <strong id="statusValue">
+                            Ready
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <span class="stat-icon">🔍</span>
+
+                    <div>
+                        <span class="stat-label">
+                            MATCHES
+                        </span>
+
+                        <strong id="matchCount">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <span class="stat-icon">🧩</span>
+
+                    <div>
+                        <span class="stat-label">
+                            GROUPS
+                        </span>
+
+                        <strong id="groupCount">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <span class="stat-icon">⚡</span>
+
+                    <div>
+                        <span class="stat-label">
+                            EXECUTION
+                        </span>
+
+                        <strong id="executionTime">
+                            —
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Match Preview -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="eyebrow">
+                            LIVE PREVIEW
+                        </span>
+
+                        <h2>Highlighted Matches</h2>
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="highlightPreview"
+                    class="highlight-preview"
+                >
+                    <span class="placeholder-text">
+                        Matches will appear here...
+                    </span>
+                </div>
+
+            </div>
+
+
+            <!-- Match Results -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="eyebrow">
+                            RESULTS
+                        </span>
+
+                        <h2>Match Details</h2>
+                    </div>
+
+                    <button
+                        id="copyBtn"
+                        class="btn btn-primary btn-small"
+                        type="button"
+                    >
+                        Copy Regex
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="matchResults"
+                    class="match-results"
+                >
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            🔎
+                        </div>
+
+                        <h3>No matches yet</h3>
+
+                        <p>
+                            Enter a regex pattern and test text
+                            to see matching results.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             BUILDER TAB
+        ================================================== -->
+
+        <section
+            id="builder"
+            class="tab-panel"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="eyebrow">
+                            REGEX BUILDER
+                        </span>
+
+                        <h2>Build Your Pattern</h2>
+                    </div>
+
+                </div>
+
+
+                <div class="builder-layout">
+
+                    <div class="builder-sidebar">
+
+                        <h3>Components</h3>
+
+                        <div class="builder-group">
+
+                            <span>Character Classes</span>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="\d"
+                                type="button"
+                            >
+                                <code>\d</code>
+                                <small>Digit</small>
+                            </button>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="\w"
+                                type="button"
+                            >
+                                <code>\w</code>
+                                <small>Word</small>
+                            </button>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="\s"
+                                type="button"
+                            >
+                                <code>\s</code>
+                                <small>Whitespace</small>
+                            </button>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="."
+                                type="button"
+                            >
+                                <code>.</code>
+                                <small>Any Character</small>
+                            </button>
+
+                        </div>
+
+
+                        <div class="builder-group">
+
+                            <span>Quantifiers</span>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="*"
+                                type="button"
+                            >
+                                <code>*</code>
+                                <small>Zero or More</small>
+                            </button>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="+"
+                                type="button"
+                            >
+                                <code>+</code>
+                                <small>One or More</small>
+                            </button>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="?"
+                                type="button"
+                            >
+                                <code>?</code>
+                                <small>Optional</small>
+                            </button>
+
+                        </div>
+
+
+                        <div class="builder-group">
+
+                            <span>Anchors</span>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="^"
+                                type="button"
+                            >
+                                <code>^</code>
+                                <small>Start</small>
+                            </button>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="$"
+                                type="button"
+                            >
+                                <code>$</code>
+                                <small>End</small>
+                            </button>
+
+                            <button
+                                class="builder-btn"
+                                data-regex="\b"
+                                type="button"
+                            >
+                                <code>\b</code>
+                                <small>Word Boundary</small>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="builder-workspace">
+
+                        <label for="builderOutput">
+                            Generated Regex
+                        </label>
+
+                        <div class="builder-output">
+
+                            <code id="builderOutput">
+                                ^
+                            </code>
+
+                            <button
+                                id="builderCopyBtn"
+                                class="icon-btn"
+                                type="button"
+                                title="Copy regex"
+                            >
+                                📋
+                            </button>
+
+                        </div>
+
+
+                        <div class="builder-actions">
+
+                            <button
+                                id="builderClearBtn"
+                                class="btn btn-secondary"
+                                type="button"
+                            >
+                                Clear
+                            </button>
+
+                            <button
+                                id="builderUseBtn"
+                                class="btn btn-primary"
+                                type="button"
+                            >
+                                Use in Tester →
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PATTERNS TAB
+        ================================================== -->
+
+        <section
+            id="patterns"
+            class="tab-panel"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="eyebrow">
+                            PATTERN LIBRARY
+                        </span>
+
+                        <h2>Common Regex Patterns</h2>
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="patternGrid"
+                    class="pattern-grid"
+                >
+                    <!-- Generated by JavaScript -->
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             EXPLAIN TAB
+        ================================================== -->
+
+        <section
+            id="explain"
+            class="tab-panel"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="eyebrow">
+                            REGEX EXPLAINER
+                        </span>
+
+                        <h2>Understand Your Pattern</h2>
+                    </div>
+
+                </div>
+
+
+                <div class="explain-input">
+
+                    <input
+                        id="explainInput"
+                        type="text"
+                        placeholder="Enter a regex pattern..."
+                        spellcheck="false"
+                    >
+
+                    <button
+                        id="explainBtn"
+                        class="btn btn-primary"
+                        type="button"
+                    >
+                        Explain
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="explanationResult"
+                    class="explanation-result"
+                >
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            🧠
+                        </div>
+
+                        <h3>Regex explanation</h3>
+
+                        <p>
+                            Enter a pattern above to see how
+                            each part works.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SAVED TAB
+        ================================================== -->
+
+        <section
+            id="saved"
+            class="tab-panel"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="eyebrow">
+                            LOCAL STORAGE
+                        </span>
+
+                        <h2>Saved Patterns</h2>
+                    </div>
+
+                    <button
+                        id="clearSavedBtn"
+                        class="btn btn-danger btn-small"
+                        type="button"
+                    >
+                        Clear All
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="savedPatterns"
+                    class="saved-patterns"
+                >
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            💾
+                        </div>
+
+                        <h3>No saved patterns</h3>
+
+                        <p>
+                            Your saved regex patterns will
+                            appear here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         TOAST
+    ====================================================== -->
+
+    <div
+        id="toast"
+        class="toast"
+        role="status"
+        aria-live="polite"
+    >
+        <span id="toastMessage"></span>
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="js/regex-engine.js"></script>
+    <script src="js/builder.js"></script>
+    <script src="js/patterns.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
