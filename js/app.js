@@ -1,26 +1,3 @@
-/**
- * =========================================================
- * RegexX
- * Regular Expression Tester & Builder
- * Application Controller
- * =========================================================
- *
- * Responsibilities:
- * - Tab navigation
- * - Regex input handling
- * - Flag handling
- * - Theme switching
- * - Clear functionality
- * - Sample data
- * - Copy regex
- * - Save regex
- * - Toast notifications
- * - Integration with Regex Engine
- * - Integration with Builder
- * - Integration with Storage
- */
-
-
 /* =========================================================
    DOM ELEMENTS
    ========================================================= */
