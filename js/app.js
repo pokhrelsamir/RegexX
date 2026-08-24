@@ -15,9 +15,11 @@
  * - Copy regex
  * - Save regex
  * - Toast notifications
- * - Integration with Regex Engine
- * - Integration with Builder
- * - Integration with Storage
+ * - Application initialization
+ *
+ * Builder functionality is handled by builder.js.
+ * Regex testing is handled by regex-engine.js.
+ * Storage is handled by storage.js.
  */
 
 
@@ -108,10 +110,9 @@ navItems.forEach(nav => {
         "click",
         () => {
 
-            const tabId =
-                nav.dataset.tab;
-
-            activateTab(tabId);
+            activateTab(
+                nav.dataset.tab
+            );
 
         }
     );
@@ -159,6 +160,49 @@ function updateFlagPreview() {
 
 
 /* =========================================================
+   RUN REGEX TEST
+   ========================================================= */
+
+function runRegexTest() {
+
+    if (
+        window.RegexEngine &&
+        typeof window.RegexEngine.test ===
+        "function"
+    ) {
+
+        return window.RegexEngine.test(
+            regexInput
+                ? regexInput.value
+                : "",
+            testInput
+                ? testInput.value
+                : "",
+            getActiveFlags()
+        );
+
+    }
+
+
+    console.warn(
+        "RegexX: RegexEngine.test() is unavailable."
+    );
+
+
+    return null;
+}
+
+
+/*
+ * Make the application test function
+ * available to other modules.
+ */
+
+window.runRegexTest =
+    runRegexTest;
+
+
+/* =========================================================
    FLAG EVENTS
    ========================================================= */
 
@@ -183,53 +227,6 @@ document
 
 
 /* =========================================================
-   RUN REGEX TEST
-   ========================================================= */
-
-function runRegexTest() {
-
-    if (
-        typeof window.RegexEngine !==
-        "undefined" &&
-        typeof window.RegexEngine.test ===
-        "function"
-    ) {
-
-        return window.RegexEngine.test(
-            regexInput
-                ? regexInput.value
-                : "",
-            testInput
-                ? testInput.value
-                : "",
-            getActiveFlags()
-        );
-    }
-
-
-    /*
-     * Compatibility fallback.
-     *
-     * This allows RegexX to work even if
-     * regex-engine.js exposes runRegexTest()
-     * instead of RegexEngine.test().
-     */
-
-    if (
-        typeof window.runRegexTest ===
-        "function" &&
-        window.runRegexTest !== runRegexTest
-    ) {
-
-        return window.runRegexTest();
-    }
-
-
-    return null;
-}
-
-
-/* =========================================================
    REGEX INPUT EVENTS
    ========================================================= */
 
@@ -238,8 +235,6 @@ if (regexInput) {
     regexInput.addEventListener(
         "input",
         () => {
-
-            updateFlagPreview();
 
             runRegexTest();
 
@@ -284,7 +279,7 @@ function clearApplication() {
 
 
     /*
-     * Restore default flags.
+     * Restore default flag.
      */
 
     const flagInputs =
@@ -329,6 +324,10 @@ function clearApplication() {
     );
 
 
+    /*
+     * Reset status.
+     */
+
     if (regexStatus) {
 
         regexStatus.textContent =
@@ -341,7 +340,7 @@ function clearApplication() {
 
 
     /*
-     * Reset preview.
+     * Reset highlight preview.
      */
 
     const preview =
@@ -445,7 +444,7 @@ user@invalid`;
 
 
     /*
-     * Global + Ignore Case
+     * Global + Ignore Case.
      */
 
     document
@@ -560,56 +559,45 @@ const THEME_KEY =
 
 function applyTheme(theme) {
 
-    if (theme === "dark") {
+    const isDark =
+        theme === "dark";
 
-        document.body.classList.add(
-            "dark-theme"
+
+    document.body.classList.toggle(
+        "dark-theme",
+        isDark
+    );
+
+
+    if (themeBtn) {
+
+        themeBtn.textContent =
+            isDark
+                ? "☀️"
+                : "🌙";
+
+
+        themeBtn.title =
+            isDark
+                ? "Switch to light theme"
+                : "Switch to dark theme";
+
+
+        themeBtn.setAttribute(
+            "aria-label",
+            isDark
+                ? "Switch to light theme"
+                : "Switch to dark theme"
         );
-
-
-        if (themeBtn) {
-
-            themeBtn.textContent =
-                "☀️";
-
-            themeBtn.title =
-                "Switch to light theme";
-
-            themeBtn.setAttribute(
-                "aria-label",
-                "Switch to light theme"
-            );
-
-        }
-
-    } else {
-
-        document.body.classList.remove(
-            "dark-theme"
-        );
-
-
-        if (themeBtn) {
-
-            themeBtn.textContent =
-                "🌙";
-
-            themeBtn.title =
-                "Switch to dark theme";
-
-            themeBtn.setAttribute(
-                "aria-label",
-                "Switch to dark theme"
-            );
-
-        }
 
     }
 
 
     localStorage.setItem(
         THEME_KEY,
-        theme
+        isDark
+            ? "dark"
+            : "light"
     );
 }
 
@@ -660,7 +648,10 @@ function initializeTheme() {
         );
 
 
-    if (savedTheme) {
+    if (
+        savedTheme === "dark" ||
+        savedTheme === "light"
+    ) {
 
         applyTheme(
             savedTheme
@@ -669,10 +660,6 @@ function initializeTheme() {
         return;
     }
 
-
-    /*
-     * Respect system preference.
-     */
 
     const prefersDark =
         window.matchMedia &&
@@ -686,83 +673,6 @@ function initializeTheme() {
             ? "dark"
             : "light"
     );
-}
-
-
-/* =========================================================
-   USE BUILDER REGEX
-   ========================================================= */
-
-function useBuilderRegex() {
-
-    const builderOutput =
-        document.getElementById(
-            "builderOutput"
-        );
-
-
-    if (!builderOutput) {
-        return;
-    }
-
-
-    const pattern =
-        builderOutput.textContent.trim();
-
-
-    if (
-        !pattern ||
-        pattern ===
-        "Start building your regex..."
-    ) {
-
-        showToast(
-            "Build a regex pattern first."
-        );
-
-        return;
-    }
-
-
-    if (regexInput) {
-
-        regexInput.value =
-            pattern;
-
-    }
-
-
-    activateTab(
-        "tester"
-    );
-
-
-    runRegexTest();
-
-
-    showToast(
-        "Builder regex loaded into Tester."
-    );
-}
-
-
-/* =========================================================
-   BUILDER USE BUTTON
-   ========================================================= */
-
-const builderUseBtn =
-    document.getElementById(
-        "builderUseBtn"
-    );
-
-
-if (builderUseBtn) {
-
-    builderUseBtn.addEventListener(
-        "click",
-        useBuilderRegex
-    );
-
 }
 
 
@@ -799,7 +709,6 @@ document.addEventListener(
 
         /*
          * Ctrl/Cmd + Enter
-         * Run regex test.
          */
 
         if (
@@ -821,7 +730,6 @@ document.addEventListener(
 
         /*
          * Ctrl/Cmd + Shift + S
-         * Save current regex.
          */
 
         if (
@@ -855,9 +763,7 @@ function showToast(message) {
         !toastMessage
     ) {
 
-        console.log(
-            message
-        );
+        console.log(message);
 
         return;
     }
@@ -892,8 +798,7 @@ function showToast(message) {
 
 
 /*
- * Expose toast globally so storage.js
- * can use the same notification system.
+ * Expose globally.
  */
 
 window.showToast =
@@ -921,6 +826,7 @@ function setText(
             value;
 
     }
+
 }
 
 
@@ -936,7 +842,7 @@ function initializeApp() {
 
 
     /*
-     * Make Tester the initial tab.
+     * Start on Tester.
      */
 
     activateTab(
@@ -945,7 +851,7 @@ function initializeApp() {
 
 
     /*
-     * Initialize storage if available.
+     * Initialize storage.
      */
 
     if (
@@ -959,7 +865,7 @@ function initializeApp() {
 
 
     /*
-     * Run initial regex test.
+     * Run initial test if input exists.
      */
 
     if (
