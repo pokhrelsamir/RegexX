@@ -1,3 +1,30 @@
+/**
+ * =========================================================
+ * RegexX
+ * Regular Expression Tester & Builder
+ * Application Controller
+ * =========================================================
+ *
+ * Responsibilities:
+ * - Tab navigation
+ * - Regex input handling
+ * - Flag handling
+ * - Theme switching
+ * - Clear functionality
+ * - Sample data
+ * - Copy regex
+ * - Save regex
+ * - Keyboard shortcuts
+ * - Toast notifications
+ * - Application initialization
+ *
+ * NOTE:
+ * Builder functionality is handled by builder.js.
+ * Storage functionality is handled by storage.js.
+ * Regex execution is handled by regex-engine.js.
+ */
+
+
 /* =========================================================
    DOM ELEMENTS
    ========================================================= */
@@ -25,6 +52,9 @@ const sampleBtn =
 
 const copyBtn =
     document.getElementById("copyBtn");
+
+const saveBtn =
+    document.getElementById("saveBtn");
 
 const flagPreview =
     document.getElementById("flagPreview");
@@ -133,6 +163,94 @@ function updateFlagPreview() {
 
 
 /* =========================================================
+   RUN REGEX TEST
+   ========================================================= */
+
+function runRegexTest() {
+
+    const pattern =
+        regexInput
+            ? regexInput.value
+            : "";
+
+    const text =
+        testInput
+            ? testInput.value
+            : "";
+
+    const flags =
+        getActiveFlags();
+
+
+    /*
+     * Primary Regex Engine API.
+     */
+
+    if (
+        window.RegexEngine &&
+        typeof window.RegexEngine.test ===
+        "function"
+    ) {
+
+        try {
+
+            return window.RegexEngine.test(
+                pattern,
+                text,
+                flags
+            );
+
+        } catch (error) {
+
+            console.error(
+                "RegexX: Regex engine error.",
+                error
+            );
+
+            return null;
+        }
+    }
+
+
+    /*
+     * Compatibility API.
+     */
+
+    if (
+        typeof window.regexEngineTest ===
+        "function"
+    ) {
+
+        try {
+
+            return window.regexEngineTest(
+                pattern,
+                text,
+                flags
+            );
+
+        } catch (error) {
+
+            console.error(
+                "RegexX: Regex engine error.",
+                error
+            );
+
+            return null;
+        }
+    }
+
+
+    console.warn(
+        "RegexX: Regex Engine is not available."
+    );
+
+
+    return null;
+}
+
+
+/* =========================================================
    FLAG EVENTS
    ========================================================= */
 
@@ -154,68 +272,6 @@ document
         );
 
     });
-
-
-/* =========================================================
-   RUN REGEX TEST
-   ========================================================= */
-
-function runRegexTest() {
-
-    /*
-     * Preferred Regex Engine API
-     */
-
-    if (
-        window.RegexEngine &&
-        typeof window.RegexEngine.test ===
-        "function"
-    ) {
-
-        return window.RegexEngine.test(
-            regexInput
-                ? regexInput.value
-                : "",
-
-            testInput
-                ? testInput.value
-                : "",
-
-            getActiveFlags()
-        );
-    }
-
-
-    /*
-     * Compatibility fallback.
-     */
-
-    if (
-        typeof window.regexEngineTest ===
-        "function"
-    ) {
-
-        return window.regexEngineTest(
-            regexInput
-                ? regexInput.value
-                : "",
-
-            testInput
-                ? testInput.value
-                : "",
-
-            getActiveFlags()
-        );
-    }
-
-
-    console.warn(
-        "RegexX: Regex Engine is not available."
-    );
-
-
-    return null;
-}
 
 
 /* =========================================================
@@ -262,12 +318,20 @@ if (testInput) {
 
 function clearApplication() {
 
+    /*
+     * Clear regex.
+     */
+
     if (regexInput) {
 
         regexInput.value = "";
 
     }
 
+
+    /*
+     * Clear test text.
+     */
 
     if (testInput) {
 
@@ -277,7 +341,7 @@ function clearApplication() {
 
 
     /*
-     * Restore default flags.
+     * Restore global flag.
      */
 
     const flagInputs =
@@ -298,7 +362,7 @@ function clearApplication() {
 
 
     /*
-     * Reset statistics.
+     * Reset status.
      */
 
     setText(
@@ -306,15 +370,18 @@ function clearApplication() {
         "Ready"
     );
 
+
     setText(
         "matchCount",
         "0"
     );
 
+
     setText(
         "groupCount",
         "0"
     );
+
 
     setText(
         "executionTime",
@@ -334,7 +401,7 @@ function clearApplication() {
 
 
     /*
-     * Reset highlighted preview.
+     * Reset highlighted matches.
      */
 
     const preview =
@@ -355,7 +422,7 @@ function clearApplication() {
 
 
     /*
-     * Reset match results.
+     * Reset match details.
      */
 
     const results =
@@ -416,6 +483,10 @@ if (clearBtn) {
 
 function loadSample() {
 
+    /*
+     * Email regex.
+     */
+
     if (regexInput) {
 
         regexInput.value =
@@ -423,6 +494,10 @@ function loadSample() {
 
     }
 
+
+    /*
+     * Sample test data.
+     */
 
     if (testInput) {
 
@@ -440,7 +515,7 @@ user@invalid`;
 
 
     /*
-     * Global + Ignore Case
+     * Enable Global + Ignore Case.
      */
 
     document
@@ -505,9 +580,59 @@ async function copyRegex() {
 
     try {
 
-        await navigator.clipboard.writeText(
-            pattern
-        );
+        /*
+         * Modern Clipboard API.
+         */
+
+        if (
+            navigator.clipboard &&
+            typeof navigator.clipboard.writeText ===
+            "function"
+        ) {
+
+            await navigator.clipboard.writeText(
+                pattern
+            );
+
+        } else {
+
+            /*
+             * Fallback for environments where
+             * Clipboard API is unavailable.
+             */
+
+            const textarea =
+                document.createElement(
+                    "textarea"
+                );
+
+
+            textarea.value =
+                pattern;
+
+
+            textarea.style.position =
+                "fixed";
+
+            textarea.style.opacity =
+                "0";
+
+
+            document.body.appendChild(
+                textarea
+            );
+
+
+            textarea.select();
+
+            document.execCommand(
+                "copy"
+            );
+
+
+            textarea.remove();
+
+        }
 
 
         showToast(
@@ -527,7 +652,6 @@ async function copyRegex() {
         );
 
     }
-
 }
 
 
@@ -546,6 +670,43 @@ if (copyBtn) {
 
 
 /* =========================================================
+   SAVE CURRENT REGEX
+   ========================================================= */
+
+function saveCurrentRegex() {
+
+    if (
+        typeof promptSavePattern ===
+        "function"
+    ) {
+
+        promptSavePattern();
+
+        return;
+    }
+
+
+    showToast(
+        "Storage module is not available."
+    );
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
+
+if (saveBtn) {
+
+    saveBtn.addEventListener(
+        "click",
+        saveCurrentRegex
+    );
+
+}
+
+
+/* =========================================================
    THEME
    ========================================================= */
 
@@ -553,9 +714,22 @@ const THEME_KEY =
     "regexx_theme";
 
 
+/* =========================================================
+   APPLY THEME
+   ========================================================= */
+
 function applyTheme(theme) {
 
-    if (theme === "dark") {
+    const selectedTheme =
+        theme === "dark"
+            ? "dark"
+            : "light";
+
+
+    if (
+        selectedTheme ===
+        "dark"
+    ) {
 
         document.body.classList.add(
             "dark-theme"
@@ -602,10 +776,21 @@ function applyTheme(theme) {
     }
 
 
-    localStorage.setItem(
-        THEME_KEY,
-        theme
-    );
+    try {
+
+        localStorage.setItem(
+            THEME_KEY,
+            selectedTheme
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "RegexX: Unable to save theme.",
+            error
+        );
+
+    }
 }
 
 
@@ -649,10 +834,24 @@ if (themeBtn) {
 
 function initializeTheme() {
 
-    const savedTheme =
-        localStorage.getItem(
-            THEME_KEY
+    let savedTheme = null;
+
+
+    try {
+
+        savedTheme =
+            localStorage.getItem(
+                THEME_KEY
+            );
+
+    } catch (error) {
+
+        console.warn(
+            "RegexX: Unable to read saved theme.",
+            error
         );
+
+    }
 
 
     if (
@@ -688,29 +887,6 @@ function initializeTheme() {
 
 
 /* =========================================================
-   SAVE CURRENT REGEX
-   ========================================================= */
-
-function saveCurrentRegex() {
-
-    if (
-        typeof promptSavePattern ===
-        "function"
-    ) {
-
-        promptSavePattern();
-
-        return;
-    }
-
-
-    showToast(
-        "Storage module is not available."
-    );
-}
-
-
-/* =========================================================
    KEYBOARD SHORTCUTS
    ========================================================= */
 
@@ -720,6 +896,7 @@ document.addEventListener(
 
         /*
          * Ctrl/Cmd + Enter
+         *
          * Run regex test.
          */
 
@@ -742,6 +919,7 @@ document.addEventListener(
 
         /*
          * Ctrl/Cmd + Shift + S
+         *
          * Save current regex.
          */
 
@@ -776,7 +954,9 @@ function showToast(message) {
         !toastMessage
     ) {
 
-        console.log(message);
+        console.log(
+            message
+        );
 
         return;
     }
@@ -812,6 +992,11 @@ function showToast(message) {
 
 /*
  * Expose toast globally.
+ *
+ * Used by:
+ * - storage.js
+ * - builder.js
+ * - patterns.js
  */
 
 window.showToast =
@@ -848,7 +1033,16 @@ function setText(
 
 function initializeApp() {
 
+    /*
+     * Update flags.
+     */
+
     updateFlagPreview();
+
+
+    /*
+     * Initialize theme.
+     */
 
     initializeTheme();
 
@@ -863,7 +1057,7 @@ function initializeApp() {
 
 
     /*
-     * Initialize storage if available.
+     * Initialize storage.
      */
 
     if (
@@ -877,7 +1071,8 @@ function initializeApp() {
 
 
     /*
-     * Run initial test if values exist.
+     * Run initial test if
+     * a pattern already exists.
      */
 
     if (
