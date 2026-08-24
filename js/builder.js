@@ -7,9 +7,9 @@
  * Responsibilities:
  * - Visual regex construction
  * - Component insertion
+ * - Custom token insertion
  * - Regex preview
  * - Copy generated regex
- * - Clear builder
  * - Send regex to Tester
  */
 
@@ -89,9 +89,7 @@ function addBuilderComponent(
     }
 
 
-    builderPattern +=
-        component;
-
+    builderPattern += component;
 
     updateBuilderOutput();
 }
@@ -109,44 +107,24 @@ function removeLastBuilderComponent() {
 
 
     /*
-     * Remove two-character escaped tokens.
-     *
-     * Examples:
-     * \d
-     * \w
-     * \s
-     * \D
-     * \W
-     * \b
-     * \B
+     * Remove escaped tokens.
      */
 
-    const escapedTokens = [
-        "\\d",
-        "\\w",
-        "\\s",
-        "\\D",
-        "\\W",
-        "\\b",
-        "\\B"
-    ];
-
-
-    const matchedToken =
-        escapedTokens.find(
-            token =>
-                builderPattern.endsWith(
-                    token
-                )
-        );
-
-
-    if (matchedToken) {
+    if (
+        builderPattern.endsWith("\\d") ||
+        builderPattern.endsWith("\\w") ||
+        builderPattern.endsWith("\\s") ||
+        builderPattern.endsWith("\\b") ||
+        builderPattern.endsWith("\\D") ||
+        builderPattern.endsWith("\\W") ||
+        builderPattern.endsWith("\\S") ||
+        builderPattern.endsWith("\\B")
+    ) {
 
         builderPattern =
             builderPattern.slice(
                 0,
-                -matchedToken.length
+                -2
             );
 
     } else {
@@ -156,7 +134,6 @@ function removeLastBuilderComponent() {
                 0,
                 -1
             );
-
     }
 
 
@@ -173,6 +150,7 @@ function clearBuilder() {
     builderPattern = "";
 
     updateBuilderOutput();
+
 
     showBuilderToast(
         "Builder cleared."
@@ -220,12 +198,11 @@ async function copyBuilderRegex() {
         );
 
     }
-
 }
 
 
 /* =========================================================
-   USE IN TESTER
+   USE BUILDER REGEX IN TESTER
    ========================================================= */
 
 function useBuilderRegex() {
@@ -241,7 +218,7 @@ function useBuilderRegex() {
 
 
     /*
-     * Tester input.
+     * Get Tester input.
      */
 
     const regexInput =
@@ -260,12 +237,16 @@ function useBuilderRegex() {
     }
 
 
+    /*
+     * Load pattern.
+     */
+
     regexInput.value =
         builderPattern;
 
 
     /*
-     * Activate Tester tab.
+     * Switch to Tester.
      */
 
     const navItems =
@@ -283,8 +264,7 @@ function useBuilderRegex() {
 
         nav.classList.toggle(
             "active",
-            nav.dataset.tab ===
-                "tester"
+            nav.dataset.tab === "tester"
         );
 
     });
@@ -301,15 +281,39 @@ function useBuilderRegex() {
 
 
     /*
-     * Run RegexX test.
+     * Run test.
      */
 
     if (
-        typeof window.runRegexTest ===
+        typeof window.RegexEngine !==
+        "undefined" &&
+        typeof window.RegexEngine.test ===
         "function"
     ) {
 
-        window.runRegexTest();
+        const testInput =
+            document.getElementById(
+                "testInput"
+            );
+
+
+        const flags =
+            Array.from(
+                document.querySelectorAll(
+                    '.flag-option input[type="checkbox"]:checked'
+                )
+            )
+            .map(input => input.value)
+            .join("");
+
+
+        window.RegexEngine.test(
+            regexInput.value,
+            testInput
+                ? testInput.value
+                : "",
+            flags
+        );
 
     }
 
@@ -321,7 +325,7 @@ function useBuilderRegex() {
 
 
 /* =========================================================
-   TOAST
+   BUILDER TOAST
    ========================================================= */
 
 function showBuilderToast(
@@ -348,7 +352,7 @@ function showBuilderToast(
 
 
 /* =========================================================
-   BUILDER COMPONENT EVENTS
+   BUILDER BUTTON EVENTS
    ========================================================= */
 
 builderButtons.forEach(
@@ -379,7 +383,7 @@ builderButtons.forEach(
 
 
 /* =========================================================
-   COPY BUTTON
+   COPY
    ========================================================= */
 
 if (builderCopyBtn) {
@@ -393,7 +397,7 @@ if (builderCopyBtn) {
 
 
 /* =========================================================
-   CLEAR BUTTON
+   CLEAR
    ========================================================= */
 
 if (builderClearBtn) {
@@ -407,7 +411,7 @@ if (builderClearBtn) {
 
 
 /* =========================================================
-   USE BUTTON
+   USE IN TESTER
    ========================================================= */
 
 if (builderUseBtn) {
@@ -446,32 +450,31 @@ document.addEventListener(
 
 
         /*
-         * Never interfere with
-         * text inputs.
-         */
-
-        const tagName =
-            event.target?.tagName;
-
-
-        if (
-            tagName === "INPUT" ||
-            tagName === "TEXTAREA"
-        ) {
-
-            return;
-        }
-
-
-        /*
-         * Backspace:
-         * remove last component.
+         * Backspace
          */
 
         if (
-            event.key ===
-            "Backspace"
+            event.key === "Backspace"
         ) {
+
+            /*
+             * Don't interfere with
+             * actual form controls.
+             */
+
+            const tag =
+                event.target.tagName;
+
+
+            if (
+                tag === "INPUT" ||
+                tag === "TEXTAREA" ||
+                tag === "SELECT"
+            ) {
+
+                return;
+            }
+
 
             event.preventDefault();
 
@@ -481,13 +484,11 @@ document.addEventListener(
 
 
         /*
-         * Escape:
-         * clear builder.
+         * Escape
          */
 
         if (
-            event.key ===
-            "Escape"
+            event.key === "Escape"
         ) {
 
             clearBuilder();
