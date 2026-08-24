@@ -11,6 +11,7 @@
  * - Filter by category
  * - Copy regex
  * - Load patterns into Tester
+ * =========================================================
  */
 
 
@@ -29,14 +30,9 @@ const REGEX_PATTERNS = [
         name: "Email Address",
         category: "Email",
         icon: "📧",
-        description:
-            "Matches common email addresses.",
-
-        regex:
-            "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}",
-
-        example:
-            "samir@example.com"
+        description: "Matches common email addresses.",
+        regex: "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}",
+        example: "samir@example.com"
     },
 
 
@@ -49,14 +45,9 @@ const REGEX_PATTERNS = [
         name: "URL",
         category: "Web",
         icon: "🌐",
-        description:
-            "Matches HTTP and HTTPS URLs.",
-
-        regex:
-            "https?:\\/\\/(?:www\\.)?[^\\s]+",
-
-        example:
-            "https://example.com"
+        description: "Matches HTTP and HTTPS URLs.",
+        regex: "https?:\\/\\/(?:www\\.)?[^\\s]+",
+        example: "https://example.com"
     },
 
 
@@ -69,14 +60,9 @@ const REGEX_PATTERNS = [
         name: "Phone Number",
         category: "Phone",
         icon: "📱",
-        description:
-            "Matches common phone number formats.",
-
-        regex:
-            "\\+?[0-9]{1,3}[\\s.-]?[0-9]{3,4}[\\s.-]?[0-9]{3,4}",
-
-        example:
-            "+977-9812345678"
+        description: "Matches common phone number formats.",
+        regex: "\\+?[0-9]{1,3}[\\s.-]?[0-9]{3,4}[\\s.-]?[0-9]{3,4}",
+        example: "+977-9812345678"
     },
 
 
@@ -89,46 +75,29 @@ const REGEX_PATTERNS = [
         name: "Integer",
         category: "Numbers",
         icon: "🔢",
-        description:
-            "Matches positive and negative whole numbers.",
-
-        regex:
-            "-?\\d+",
-
-        example:
-            "-125"
+        description: "Matches positive and negative whole numbers.",
+        regex: "-?\\d+",
+        example: "-125"
     },
-
 
     {
         id: "decimal",
         name: "Decimal Number",
         category: "Numbers",
         icon: "🔢",
-        description:
-            "Matches integers and decimal numbers.",
-
-        regex:
-            "-?\\d+(?:\\.\\d+)?",
-
-        example:
-            "125.50"
+        description: "Matches integers and decimal numbers.",
+        regex: "-?\\d+(?:\\.\\d+)?",
+        example: "125.50"
     },
-
 
     {
         id: "positive-number",
         name: "Positive Number",
         category: "Numbers",
         icon: "➕",
-        description:
-            "Matches positive integers and decimals.",
-
-        regex:
-            "\\d+(?:\\.\\d+)?",
-
-        example:
-            "42.75"
+        description: "Matches positive integers and decimals.",
+        regex: "\\d+(?:\\.\\d+)?",
+        example: "42.75"
     },
 
 
@@ -141,46 +110,29 @@ const REGEX_PATTERNS = [
         name: "Date",
         category: "Date & Time",
         icon: "📅",
-        description:
-            "Matches common YYYY-MM-DD date formats.",
-
-        regex:
-            "\\d{4}-\\d{2}-\\d{2}",
-
-        example:
-            "2026-08-24"
+        description: "Matches common YYYY-MM-DD date formats.",
+        regex: "\\d{4}-\\d{2}-\\d{2}",
+        example: "2026-08-24"
     },
-
 
     {
         id: "time",
         name: "Time",
         category: "Date & Time",
         icon: "⏰",
-        description:
-            "Matches 24-hour HH:MM time format.",
-
-        regex:
-            "(?:[01]\\d|2[0-3]):[0-5]\\d",
-
-        example:
-            "20:45"
+        description: "Matches 24-hour HH:MM time format.",
+        regex: "(?:[01]\\d|2[0-3]):[0-5]\\d",
+        example: "20:45"
     },
-
 
     {
         id: "datetime",
         name: "Date & Time",
         category: "Date & Time",
         icon: "🕐",
-        description:
-            "Matches ISO-style date and time.",
-
-        regex:
-            "\\d{4}-\\d{2}-\\d{2}T(?:[01]\\d|2[0-3]):[0-5]\\d",
-
-        example:
-            "2026-08-24T20:45"
+        description: "Matches ISO-style date and time.",
+        regex: "\\d{4}-\\d{2}-\\d{2}T(?:[01]\\d|2[0-3]):[0-5]\\d",
+        example: "2026-08-24T20:45"
     },
 
 
@@ -195,14 +147,9 @@ const REGEX_PATTERNS = [
         icon: "👤",
         description:
             "Matches usernames containing letters, numbers, and underscores.",
-
-        regex:
-            "^[A-Za-z0-9_]{3,20}$",
-
-        example:
-            "samir_123"
+        regex: "^[A-Za-z0-9_]{3,20}$",
+        example: "samir_123"
     },
-
 
     {
         id: "strong-password",
@@ -211,12 +158,8 @@ const REGEX_PATTERNS = [
         icon: "🔐",
         description:
             "Requires uppercase, lowercase, number, and special character.",
-
-        regex:
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$",
-
-        example:
-            "Strong@123"
+        regex: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$",
+        example: "Strong@123"
     },
 
 
@@ -229,30 +172,19 @@ const REGEX_PATTERNS = [
         name: "IPv4 Address",
         category: "Network",
         icon: "🌐",
-        description:
-            "Matches IPv4-style addresses.",
-
-        regex:
-            "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b",
-
-        example:
-            "192.168.1.100"
+        description: "Matches IPv4-style addresses.",
+        regex: "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b",
+        example: "192.168.1.100"
     },
-
 
     {
         id: "ipv6",
         name: "IPv6 Address",
         category: "Network",
         icon: "🌍",
-        description:
-            "Matches a simplified IPv6 address format.",
-
-        regex:
-            "(?:[0-9A-Fa-f]{1,4}:){2,7}[0-9A-Fa-f]{1,4}",
-
-        example:
-            "2001:db8::1"
+        description: "Matches a simplified IPv6 address format.",
+        regex: "(?:[0-9A-Fa-f]{1,4}:){2,7}[0-9A-Fa-f]{1,4}",
+        example: "2001:db8::1"
     },
 
 
@@ -267,12 +199,8 @@ const REGEX_PATTERNS = [
         icon: "💳",
         description:
             "Matches common 13–19 digit card number formats.",
-
-        regex:
-            "\\b(?:\\d[ -]*?){13,19}\\b",
-
-        example:
-            "4111 1111 1111 1111"
+        regex: "\\b(?:\\d[ -]*?){13,19}\\b",
+        example: "4111 1111 1111 1111"
     },
 
 
@@ -287,12 +215,8 @@ const REGEX_PATTERNS = [
         icon: "🎨",
         description:
             "Matches 3 or 6 digit hexadecimal colors.",
-
-        regex:
-            "#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})\\b",
-
-        example:
-            "#6366f1"
+        regex: "#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})\\b",
+        example: "#6366f1"
     },
 
 
@@ -307,17 +231,13 @@ const REGEX_PATTERNS = [
         icon: "🏷️",
         description:
             "Matches basic HTML opening and closing tags.",
-
-        regex:
-            "<\\/?[A-Za-z][^>]*>",
-
-        example:
-            "<div>"
+        regex: "<\\/?[A-Za-z][^>]*>",
+        example: "<div>"
     },
 
 
     /* =====================================================
-       ALPHABETIC
+       TEXT
     ===================================================== */
 
     {
@@ -327,14 +247,9 @@ const REGEX_PATTERNS = [
         icon: "🔤",
         description:
             "Matches strings containing only alphabetic characters.",
-
-        regex:
-            "^[A-Za-z]+$",
-
-        example:
-            "RegexX"
+        regex: "^[A-Za-z]+$",
+        example: "RegexX"
     },
-
 
     {
         id: "lowercase",
@@ -343,14 +258,9 @@ const REGEX_PATTERNS = [
         icon: "🔡",
         description:
             "Matches strings containing only lowercase letters.",
-
-        regex:
-            "^[a-z]+$",
-
-        example:
-            "regexx"
+        regex: "^[a-z]+$",
+        example: "regexx"
     },
-
 
     {
         id: "uppercase",
@@ -359,18 +269,9 @@ const REGEX_PATTERNS = [
         icon: "🔠",
         description:
             "Matches strings containing only uppercase letters.",
-
-        regex:
-            "^[A-Z]+$",
-
-        example:
-            "REGEXX"
+        regex: "^[A-Z]+$",
+        example: "REGEXX"
     },
-
-
-    /* =====================================================
-       ALPHANUMERIC
-    ===================================================== */
 
     {
         id: "alphanumeric",
@@ -379,18 +280,9 @@ const REGEX_PATTERNS = [
         icon: "🔤",
         description:
             "Matches letters and numbers only.",
-
-        regex:
-            "^[A-Za-z0-9]+$",
-
-        example:
-            "RegexX2026"
+        regex: "^[A-Za-z0-9]+$",
+        example: "RegexX2026"
     },
-
-
-    /* =====================================================
-       WHITESPACE
-    ===================================================== */
 
     {
         id: "whitespace",
@@ -399,18 +291,9 @@ const REGEX_PATTERNS = [
         icon: "⬜",
         description:
             "Matches whitespace characters.",
-
-        regex:
-            "\\s+",
-
-        example:
-            "   "
+        regex: "\\s+",
+        example: "   "
     },
-
-
-    /* =====================================================
-       WORD
-    ===================================================== */
 
     {
         id: "word",
@@ -419,17 +302,13 @@ const REGEX_PATTERNS = [
         icon: "📝",
         description:
             "Matches word characters.",
-
-        regex:
-            "\\b\\w+\\b",
-
-        example:
-            "RegexX"
+        regex: "\\b\\w+\\b",
+        example: "RegexX"
     },
 
 
     /* =====================================================
-       ZIP CODE
+       LOCATION
     ===================================================== */
 
     {
@@ -439,17 +318,13 @@ const REGEX_PATTERNS = [
         icon: "📮",
         description:
             "Matches five-digit US ZIP codes with optional extension.",
-
-        regex:
-            "\\b\\d{5}(?:-\\d{4})?\\b",
-
-        example:
-            "10001-1234"
+        regex: "\\b\\d{5}(?:-\\d{4})?\\b",
+        example: "10001-1234"
     },
 
 
     /* =====================================================
-       MAC ADDRESS
+       NETWORK
     ===================================================== */
 
     {
@@ -459,12 +334,8 @@ const REGEX_PATTERNS = [
         icon: "🖧",
         description:
             "Matches common colon-separated MAC addresses.",
-
-        regex:
-            "(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}",
-
-        example:
-            "00:1A:2B:3C:4D:5E"
+        regex: "(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}",
+        example: "00:1A:2B:3C:4D:5E"
     },
 
 
@@ -479,10 +350,8 @@ const REGEX_PATTERNS = [
         icon: "🆔",
         description:
             "Matches standard UUID version formats.",
-
         regex:
             "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}",
-
         example:
             "550e8400-e29b-41d4-a716-446655440000"
     }
@@ -491,7 +360,7 @@ const REGEX_PATTERNS = [
 
 
 /* =========================================================
-   PATTERN STATE
+   STATE
    ========================================================= */
 
 let currentPatternSearch = "";
@@ -499,13 +368,26 @@ let currentPatternCategory = "All";
 
 
 /* =========================================================
-   DOM ELEMENT
+   DOM
    ========================================================= */
 
 const patternGrid =
-    document.getElementById(
-        "patternGrid"
-    );
+    document.getElementById("patternGrid");
+
+
+/* =========================================================
+   HTML ESCAPE
+   ========================================================= */
+
+function escapePatternHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
 
 /* =========================================================
@@ -514,14 +396,13 @@ const patternGrid =
 
 function getPatternCategories() {
 
+    const categories = REGEX_PATTERNS.map(
+        pattern => pattern.category
+    );
+
     return [
         "All",
-        ...new Set(
-            REGEX_PATTERNS.map(
-                pattern =>
-                    pattern.category
-            )
-        )
+        ...new Set(categories)
     ];
 }
 
@@ -532,51 +413,42 @@ function getPatternCategories() {
 
 function getFilteredPatterns() {
 
+    const search =
+        currentPatternSearch
+            .trim()
+            .toLowerCase();
+
+
     return REGEX_PATTERNS.filter(
         pattern => {
 
-            const matchesCategory =
-                currentPatternCategory ===
-                    "All" ||
-                pattern.category ===
-                    currentPatternCategory;
+            const categoryMatch =
+                currentPatternCategory === "All" ||
+                pattern.category === currentPatternCategory;
 
 
-            const search =
-                currentPatternSearch
-                    .trim()
-                    .toLowerCase();
+            if (!categoryMatch) {
+                return false;
+            }
 
 
             if (!search) {
-
-                return matchesCategory;
+                return true;
             }
 
 
             const searchableText = [
-
                 pattern.name,
-
                 pattern.category,
-
                 pattern.description,
-
                 pattern.regex,
-
                 pattern.example
-
             ]
                 .join(" ")
                 .toLowerCase();
 
 
-            return (
-                matchesCategory &&
-                searchableText.includes(
-                    search
-                )
-            );
+            return searchableText.includes(search);
 
         }
     );
@@ -584,56 +456,43 @@ function getFilteredPatterns() {
 
 
 /* =========================================================
-   ESCAPE HTML
-   ========================================================= */
-
-function escapePatternHTML(value) {
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-/* =========================================================
-   RENDER CATEGORY FILTER
+   RENDER FILTERS
    ========================================================= */
 
 function renderPatternFilters() {
 
-    const categories =
-        getPatternCategories();
+    if (!patternGrid) {
+        return;
+    }
 
 
-    const existingFilter =
+    const existing =
         document.getElementById(
             "patternFilters"
         );
 
 
-    if (existingFilter) {
-
-        existingFilter.remove();
+    if (existing) {
+        existing.remove();
     }
 
 
-    const filterContainer =
-        document.createElement(
-            "div"
-        );
+    const container =
+        document.createElement("div");
 
 
-    filterContainer.id =
+    container.id =
         "patternFilters";
 
-    filterContainer.className =
+    container.className =
         "pattern-filters";
 
 
-    filterContainer.innerHTML = `
+    const categories =
+        getPatternCategories();
+
+
+    container.innerHTML = `
 
         <div class="pattern-search">
 
@@ -646,6 +505,9 @@ function renderPatternFilters() {
                 type="search"
                 placeholder="Search patterns..."
                 autocomplete="off"
+                value="${escapePatternHTML(
+                    currentPatternSearch
+                )}"
             >
 
         </div>
@@ -657,15 +519,11 @@ function renderPatternFilters() {
                 category => `
 
                     <button
-                        class="
-                            pattern-category
-                            ${
-                                category ===
-                                currentPatternCategory
-                                    ? "active"
-                                    : ""
-                            }
-                        "
+                        class="pattern-category ${
+                            category === currentPatternCategory
+                                ? "active"
+                                : ""
+                        }"
                         data-category="${escapePatternHTML(
                             category
                         )}"
@@ -684,35 +542,36 @@ function renderPatternFilters() {
     `;
 
 
-    /*
-     * Insert before pattern grid.
-     */
-
     patternGrid.parentNode.insertBefore(
-        filterContainer,
+        container,
         patternGrid
     );
 
 
     const searchInput =
-        document.getElementById(
-            "patternSearch"
+        container.querySelector(
+            "#patternSearch"
         );
 
 
-    searchInput.addEventListener(
-        "input",
-        event => {
+    if (searchInput) {
 
-            currentPatternSearch =
-                event.target.value;
+        searchInput.addEventListener(
+            "input",
+            event => {
 
-            renderPatternCards();
-        }
-    );
+                currentPatternSearch =
+                    event.target.value;
+
+                renderPatternCards();
+
+            }
+        );
+
+    }
 
 
-    filterContainer
+    container
         .querySelectorAll(
             ".pattern-category"
         )
@@ -728,6 +587,7 @@ function renderPatternFilters() {
                     renderPatternFilters();
 
                     renderPatternCards();
+
                 }
             );
 
@@ -741,6 +601,11 @@ function renderPatternFilters() {
    ========================================================= */
 
 function renderPatternCards() {
+
+    if (!patternGrid) {
+        return;
+    }
+
 
     const patterns =
         getFilteredPatterns();
@@ -774,12 +639,14 @@ function renderPatternCards() {
 
 
     patternGrid.innerHTML =
-        patterns.map(
-            pattern => `
+        patterns
+            .map(pattern => `
 
                 <article
                     class="pattern-card"
-                    data-pattern-id="${pattern.id}"
+                    data-pattern-id="${escapePatternHTML(
+                        pattern.id
+                    )}"
                 >
 
                     <div class="pattern-card-header">
@@ -844,7 +711,9 @@ function renderPatternCards() {
 
                         <button
                             class="btn btn-secondary btn-small pattern-copy-btn"
-                            data-id="${pattern.id}"
+                            data-id="${escapePatternHTML(
+                                pattern.id
+                            )}"
                             type="button"
                         >
                             📋 Copy
@@ -853,7 +722,9 @@ function renderPatternCards() {
 
                         <button
                             class="btn btn-primary btn-small pattern-use-btn"
-                            data-id="${pattern.id}"
+                            data-id="${escapePatternHTML(
+                                pattern.id
+                            )}"
                             type="button"
                         >
                             🔎 Use
@@ -863,8 +734,8 @@ function renderPatternCards() {
 
                 </article>
 
-            `
-        ).join("");
+            `)
+            .join("");
 
 
     attachPatternActions();
@@ -878,8 +749,7 @@ function renderPatternCards() {
 function getPatternById(id) {
 
     return REGEX_PATTERNS.find(
-        pattern =>
-            pattern.id === id
+        pattern => pattern.id === id
     );
 }
 
@@ -901,38 +771,86 @@ async function copyPattern(id) {
 
     try {
 
-        await navigator.clipboard.writeText(
-            pattern.regex
+        if (
+            navigator.clipboard &&
+            window.isSecureContext
+        ) {
+
+            await navigator.clipboard.writeText(
+                pattern.regex
+            );
+
+        } else {
+
+            /*
+             * Fallback for local testing.
+             */
+
+            const textarea =
+                document.createElement("textarea");
+
+            textarea.value =
+                pattern.regex;
+
+            textarea.style.position =
+                "fixed";
+
+            textarea.style.opacity =
+                "0";
+
+            document.body.appendChild(
+                textarea
+            );
+
+            textarea.focus();
+            textarea.select();
+
+            document.execCommand(
+                "copy"
+            );
+
+            textarea.remove();
+
+        }
+
+
+        if (
+            typeof window.showToast ===
+            "function"
+        ) {
+
+            window.showToast(
+                `${pattern.name} copied`
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "RegexX: Pattern copy failed.",
+            error
         );
 
 
         if (
-            typeof showToast ===
+            typeof window.showToast ===
             "function"
         ) {
 
-            showToast(
-                `${pattern.name} copied`
+            window.showToast(
+                "Unable to copy pattern."
             );
+
         }
 
-    } catch {
-
-        if (
-            typeof showToast ===
-            "function"
-        ) {
-
-            showToast(
-                "Unable to copy pattern"
-            );
-        }
     }
+
 }
 
 
 /* =========================================================
-   USE PATTERN IN TESTER
+   USE PATTERN
    ========================================================= */
 
 function usePattern(id) {
@@ -946,55 +864,9 @@ function usePattern(id) {
     }
 
 
-    /*
-     * Tester input comes from app.js.
-     */
-
-    if (
-        typeof regexInput !==
-        "undefined"
-    ) {
-
-        regexInput.value =
-            pattern.regex;
-    }
-
-
-    /*
-     * Activate Tester tab.
-     */
-
-    if (
-        typeof navItems !==
-        "undefined"
-    ) {
-
-        navItems.forEach(
-            nav =>
-                nav.classList.remove(
-                    "active"
-                )
-        );
-    }
-
-
-    if (
-        typeof tabPanels !==
-        "undefined"
-    ) {
-
-        tabPanels.forEach(
-            panel =>
-                panel.classList.remove(
-                    "active"
-                )
-        );
-    }
-
-
-    const testerNav =
-        document.querySelector(
-            '[data-tab="tester"]'
+    const regexInput =
+        document.getElementById(
+            "regexInput"
         );
 
 
@@ -1004,49 +876,121 @@ function usePattern(id) {
         );
 
 
-    if (testerNav) {
-
-        testerNav.classList.add(
-            "active"
+    const testerNav =
+        document.querySelector(
+            '[data-tab="tester"]'
         );
+
+
+    if (!regexInput) {
+
+        console.error(
+            "RegexX: regexInput not found."
+        );
+
+        return;
     }
 
 
-    if (testerPanel) {
+    regexInput.value =
+        pattern.regex;
 
-        testerPanel.classList.add(
-            "active"
-        );
+
+    /*
+     * Activate Tester tab.
+     */
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(nav => {
+
+            nav.classList.toggle(
+                "active",
+                nav.dataset.tab === "tester"
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".tab-panel")
+        .forEach(panel => {
+
+            panel.classList.toggle(
+                "active",
+                panel.id === "tester"
+            );
+
+        });
+
+
+    /*
+     * Trigger input event so app.js
+     * and other listeners detect it.
+     */
+
+    regexInput.dispatchEvent(
+        new Event(
+            "input",
+            {
+                bubbles: true
+            }
+        )
+    );
+
+
+    /*
+     * Run engine directly if available.
+     */
+
+    if (
+        window.RegexEngine &&
+        typeof window.RegexEngine.test ===
+        "function"
+    ) {
+
+        window.RegexEngine.test();
+
+    } else if (
+        typeof window.runRegexTest ===
+        "function"
+    ) {
+
+        window.runRegexTest();
+
     }
 
 
     /*
-     * Run regex immediately.
+     * Scroll tester into view.
      */
 
-    if (
-        typeof runRegexTest ===
-        "function"
-    ) {
+    if (testerPanel) {
 
-        runRegexTest();
+        testerPanel.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
     }
 
 
     if (
-        typeof showToast ===
+        typeof window.showToast ===
         "function"
     ) {
 
-        showToast(
+        window.showToast(
             `${pattern.name} loaded into Tester`
         );
+
     }
+
 }
 
 
 /* =========================================================
-   ATTACH CARD ACTIONS
+   ATTACH ACTIONS
    ========================================================= */
 
 function attachPatternActions() {
@@ -1094,12 +1038,17 @@ function attachPatternActions() {
 
 
 /* =========================================================
-   INITIALIZE PATTERN LIBRARY
+   INITIALIZE
    ========================================================= */
 
 function initializePatternLibrary() {
 
     if (!patternGrid) {
+
+        console.warn(
+            "RegexX: patternGrid element not found."
+        );
+
         return;
     }
 
@@ -1107,11 +1056,38 @@ function initializePatternLibrary() {
     renderPatternFilters();
 
     renderPatternCards();
+
+
+    console.log(
+        "RegexX: Pattern library initialized."
+    );
+
 }
 
 
 /* =========================================================
-   INITIALIZATION
+   GLOBAL API
+   ========================================================= */
+
+window.RegexPatterns = {
+
+    getAll: () =>
+        [...REGEX_PATTERNS],
+
+    getById:
+        getPatternById,
+
+    getCategories:
+        getPatternCategories,
+
+    search:
+        getFilteredPatterns
+
+};
+
+
+/* =========================================================
+   DOM READY
    ========================================================= */
 
 if (
@@ -1127,4 +1103,5 @@ if (
 } else {
 
     initializePatternLibrary();
+
 }
