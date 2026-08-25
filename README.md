@@ -172,33 +172,31 @@ RegexX is organized around several core sections:
 
 ## 📸 Screenshots
 
-Add screenshots of your application here.
 
 ### 🧪 Regex Tester
 
-```md
-![RegexX Tester](screenshots/tester.png)
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c9d3cac7-8676-4c40-99b7-19a0066142c5" alt="SubnetX Dashboard" width="100%">
+</p>
 
 ### 🧱 Regex Builder
 
-```md
-![RegexX Builder](screenshots/builder.png)
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/63c3d6ff-fe92-4640-8ca6-5bdad7c3fcf4" alt="SubnetX Dashboard" width="100%">
+</p>
 
 ### 📚 Pattern Library
 
-```md
-![RegexX Patterns](screenshots/patterns.png)
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3413af2b-23dc-4992-96fd-8d914cabdad8" alt="SubnetX Dashboard" width="100%">
+</p>
 
 ### 💾 Saved Patterns
 
-```md
-![RegexX Saved Patterns](screenshots/saved.png)
-```
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ea03df05-39f0-4d59-b9e7-3dedbabb74cb" alt="SubnetX Dashboard" width="100%">
+</p>
 
-> Replace the image paths with your actual screenshot locations.
 
 ---
 
@@ -540,7 +538,7 @@ Contributions are welcome!
 ### Fork the Repository
 
 ```bash
-git fork https://github.com/theonewhowantstofork/RegexX
+git fork https://github.com/pokhrelsamir/RegexX
 ```
 
 ### Create a Branch
